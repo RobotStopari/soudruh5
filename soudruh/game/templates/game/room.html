@@ -1,0 +1,15 @@
+{% extends "game/main.html" %}
+
+{% block content %}
+
+<div class="container d-flex align-items-center justify-content-center" style="height: 100vh;">
+    <div class="row text-center">
+        <div class="col">
+            <h1>{{room.room_name}}</h1>
+            <br>
+            <a class="btn btn-danger" href="{% url 'logout' %}" role="button">Odhlásit se</a>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

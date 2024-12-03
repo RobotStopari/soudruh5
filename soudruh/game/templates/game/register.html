@@ -1,0 +1,33 @@
+{% extends "game/main.html" %}
+
+{% block content %}
+
+<div class="container d-flex align-items-center justify-content-center" style="height: 100vh;">
+    <div class="row text-center">
+        <div class="col">
+            <h1>Registruj se, soudruhu!</h1>
+            <form action="" method="POST">
+                {% csrf_token %}
+                {{form.username.label}}
+                {{form.username}}
+
+                {{form.email.label}}
+                {{form.email}}
+
+                {{form.password1.label}}
+                {{form.password1}}
+
+                {{form.password2.label}}
+                {{form.password2}}
+
+                {{form.errors}}
+
+                <input type="submit" value="Registrovat">
+            </form>
+            <p>Máš účet? <a href="{% url 'login' %}">Přihlaš se!</a></p>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+

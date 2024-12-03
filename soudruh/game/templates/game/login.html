@@ -1,0 +1,27 @@
+{% extends "game/main.html" %}
+
+{% block content %}
+
+<div class="container d-flex align-items-center justify-content-center" style="height: 100vh;">
+    <div class="row text-center">
+        <div class="col">
+            <h1>Přihlaš se, soudruhu!</h1>
+
+            <form action="" method="POST">
+                {% csrf_token %}
+                <input type="text" name="username">
+                <input type="text" name="password">
+                <input type="submit" value="Přihlásit se">
+            </form>
+
+            {% for message in messages %}
+            <p>{{messsage}}</p>
+            {% endfor %}
+
+            <p>Nemáš účet? <a href="{% url 'register' %}">Zaregistruj se!</a></p>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+

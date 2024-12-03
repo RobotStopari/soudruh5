@@ -1,0 +1,20 @@
+{% extends "game/main.html" %}
+
+{% block content %}
+
+<div class="container d-flex align-items-center justify-content-center" style="height: 100vh;">
+    <div class="row text-center">
+        <div class="col">
+            <form action="" method="POST">
+                {% csrf_token %}
+                {{form.room_name.label}}
+                {{form.room_name}}
+
+
+                <input type="submit" name="Založit">
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

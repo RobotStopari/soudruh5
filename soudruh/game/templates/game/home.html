@@ -1,0 +1,19 @@
+{% extends "game/main.html" %}
+
+{% block content %}
+
+<div class="container d-flex align-items-center justify-content-center" style="height: 100vh;">
+    <div class="row text-center">
+        <div class="col">
+            <h1>Vítej, soudruhu {{request.user}}!</h1>
+            <br>
+            <a class="btn btn-danger" href="{% url 'logout' %}" role="button">Odhlásit se</a>
+            <br><br>
+            <a class="btn btn-success" href="{% url 'create_room' %}" role="button">Založit místnost</a>
+            <a class="btn btn-light" href="#" role="button">Připojit se do místnosti</a>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
