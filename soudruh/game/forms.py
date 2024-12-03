@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import Room
+from .models import Room, Player
 
 
 
@@ -17,3 +17,8 @@ class RoomForm(ModelForm):
     class Meta:
         model = Room
         fields = ['room_name']
+        
+class SelectRoomForm(ModelForm):
+    class Meta:
+        model = Player
+        fields = ['room']

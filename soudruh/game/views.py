@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
-from .forms import CreateUserForm, RoomForm
+from .forms import CreateUserForm, RoomForm, SelectRoomForm
 from .decorators import unauthenticated_user
 from .models import *
 
@@ -115,3 +115,28 @@ def room(request, pk):
     
     else:
         return redirect('home')
+    
+    
+def join_room(request):
+    pl_room = request.user.player.room
+    
+    if pl_room is None:
+    
+        form = SelectRoomForm
+        
+        if request.method == 'POST':
+                form = SelectRoomForm(request.POST)
+                if form.is_valid():
+                    form.save()
+                    
+                    room = form.cleaned_data.get('room')
+                    player = request.user.player
+                    player.room = room
+                    player.save()
+        
+        context = {'form':form}
+        
+        return render(request, 'game/join_room.html', context)
+
+    else:
+        return redirect('room', pk=pl_room.id)
