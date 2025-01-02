@@ -2,12 +2,70 @@
 
 {% block content %}
 
-<div class="container d-flex align-items-center justify-content-center" style="height: 100vh;">
+<script>
+
+    async function reloadRoom() {
+
+        const url = "{% url 'ajax_players' %}"
+        const response = await fetch(url, {
+            method: 'GET',
+        });
+        const data = await response.json();
+        const { players, player_id } = data;
+
+        const player = data.players.find(p => p.id === player_id);
+
+        const div = document.getElementById('players');
+        const kostka = document.getElementById('hod_kostkou');
+        div.innerHTML = '';
+
+        console.log(players)
+
+        for (let p of players) {
+            div.innerHTML += `<p style="font-size: 1.4em;">${p.name} - ${p.pindex}</p>`;
+        }
+
+        if (player.on_move) {
+            kostka.style.display = ""
+        } else {
+            kostka.style.display = "none"
+        }
+    }
+    setInterval(reloadRoom, 2000);
+    reloadRoom()
+</script>
+
+
+<div class="container" style="height: 100vh;">
     <div class="row text-center">
         <div class="col">
             <h1>{{room.room_name}}</h1>
-            <br>
+        </div>
+    </div>
+    <div class="row text-center justify-content-center">
+        <div class="col-2">
             <a class="btn btn-danger" href="{% url 'logout' %}" role="button">Odhlásit se</a>
+        </div>
+        <div class="col-2">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <input type="submit" value="Opustit" class="btn btn-danger">
+            </form>
+        </div>
+        <div id="hod_kostkou" style="display:none">
+            <div class="col-2">
+                <form action="{% url 'cube' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="submit" value="Hodit kostkou" class="btn btn-success">
+                </form>
+            </div>
+        </div>
+
+    </div>
+    <div class="row text-center">
+        <div class="col">
+            <h2>Hráči v místnosti:</h2>
+            <div id='players'></div>
         </div>
     </div>
 </div>

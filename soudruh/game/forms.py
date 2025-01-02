@@ -22,3 +22,13 @@ class SelectRoomForm(ModelForm):
     class Meta:
         model = Player
         fields = ['room']
+        
+class LeaveRoomForm(ModelForm):
+    class Meta:
+        model = Player
+        fields = ['room']
+        
+class CubeForm(ModelForm):
+    class Meta:
+        model = Player
+        fields = []

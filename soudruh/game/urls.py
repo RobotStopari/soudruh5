@@ -9,6 +9,8 @@ urlpatterns = [
     path('home/', views.home, name='home'),
     path('create-room/', views.createRoom, name='create_room'),
     path('room/<str:pk>/', views.room, name='room'),
-    path('join-room/', views.join_room, name='join_room')
+    path('join-room/', views.join_room, name='join_room'),
+    path('cube/', views.cube, name='cube'),
+    path('ajax/players/', views.ajax_players, name='ajax_players')
 ]
 

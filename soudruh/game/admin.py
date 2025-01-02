@@ -36,14 +36,14 @@ class PlayerAdmin(admin.ModelAdmin):
     
     
 class RoomAdmin(admin.ModelAdmin):
-    list_display = ('room_name', 'id',)
+    list_display = ('room_name', 'id', 'actual_player',)
     
     readonly_fields = ('id',)
     
     fieldsets = (
         (None, {
             "fields": (
-                'room_name', 'id',
+                'room_name', 'id', 'actual_player',
             ),
         }),
         ('Game', {

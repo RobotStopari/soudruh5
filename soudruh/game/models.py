@@ -18,6 +18,7 @@ CATEGORIES = {
 
 class Room(models.Model):
     room_name = models.CharField(max_length=200, null=True)
+    actual_player = models.IntegerField(null=True, blank=True, default=0)
     
     game_starting_money = models.IntegerField(null=True, blank=True, default=2000)
     
@@ -57,9 +58,10 @@ class Player(models.Model):
     on_move = models.BooleanField(default=False)
     skipped = models.IntegerField(null=True, default=0)
     wait_moves = models.IntegerField(null=True, default=0)
+    is_room_admin = models.BooleanField(default=False)
     
-    def __str__(self):
-        return self.account.username
+    #def __str__(self):
+     #   return self.account.username
     
     class Meta:
         verbose_name = 'Player'
