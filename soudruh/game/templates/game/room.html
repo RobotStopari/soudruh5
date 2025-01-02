@@ -1,9 +1,6 @@
-{% extends "game/main.html" %}
-
-{% block content %}
+{% extends "game/room_templ.html" %} {% block content %}
 
 <script>
-
     async function reloadRoom() {
 
         const url = "{% url 'ajax_players' %}"
@@ -11,7 +8,10 @@
             method: 'GET',
         });
         const data = await response.json();
-        const { players, player_id } = data;
+        const {
+            players,
+            player_id
+        } = data;
 
         const player = data.players.find(p => p.id === player_id);
 
@@ -36,46 +36,54 @@
 </script>
 
 
-<div class="container" style="height: 100vh;">
-    <div class="row text-center">
-        <div class="col">
-            <h1>{{room.room_name}}</h1>
+<nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+        <span class="navbar-brand" href="#">{{room.room_name}}</span>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-5 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="{% url 'logout' %}" role="button">Odhlásit
+                        se</a>
+                </li>
+                <li class="nav-item">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="Opustit místnost" class="nav-link">
+                    </form>
+                </li>
+                <li class="nav-item">
+                </li>
+            </ul>
         </div>
     </div>
+</nav>
 
-    <div class="row text-center justify-content-center">
 
-        <!-- LOGOUT -->
-        <div class="col-2">
-            <a class="btn btn-danger" href="{% url 'logout' %}" role="button">Odhlásit se</a>
-        </div>
+<div class="container">
+    <div class="row text-center d-flex align-items-center" style="height: 90vh;">
+        <div class="col">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-7 col-12">
 
-        <!-- LEAVE ROOM -->
-        <div class="col-2">
-            <form action="" method="POST">
-                {% csrf_token %}
-                <input type="submit" value="Opustit" class="btn btn-danger">
-            </form>
-        </div>
+                    <div id="hod_kostkou" style="display:none" class="mb-4">
+                        <form action="{% url 'cube' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="submit" value="Hodit kostkou" class="btn btn-lg btn-success">
+                        </form>
+                    </div>
 
-        <!-- ROLL DICE -->
-        <div id="hod_kostkou" style="display:none">
-            <div class="col-2">
-                <form action="{% url 'cube' %}" method="POST">
-                    {% csrf_token %}
-                    <input type="submit" value="Hodit kostkou" class="btn btn-success">
-                </form>
+
+                    <h1>Hráči v místnosti:</h1>
+                    <div id='players'></div>
+
+                </div>
             </div>
-        </div>
-
-
-    </div>
-    <div class="row text-center">
-        <div class="col">
-            <h2>Hráči v místnosti:</h2>
-            <div id='players'></div>
         </div>
     </div>
 </div>
+
 
 {% endblock content %}

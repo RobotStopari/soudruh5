@@ -74,7 +74,7 @@ def home(request):
 @auth_user_roomless
 def createRoom(request):        
     form = RoomForm()
-    
+
     if request.method == 'POST':
         form = RoomForm(request.POST)
         if form.is_valid():
@@ -88,24 +88,26 @@ def createRoom(request):
             
             return redirect('room', pk=player.room.id)
         
-        context = {'form':form}
-        
-        return render(request, 'game/new_room_form.html', context)
+    context = {'form':form}
+    
+    return render(request, 'game/new_room_form.html', context)
     
 @auth_user_roomless
 def join_room(request):
     form = SelectRoomForm
     
     if request.method == 'POST':
-            form = SelectRoomForm(request.POST)
-            if form.is_valid():
-                
-                
-                room = form.cleaned_data.get('room')
-                player = request.user.player
-                player.room = room
-                player.save()
-                return redirect('room', pk=player.room.id)
+        form = SelectRoomForm(request.POST)
+        if form.is_valid():
+            room = form.cleaned_data.get('room')
+            
+            if room == None:
+                return redirect('join_room')
+            
+            player = request.user.player
+            player.room = room
+            player.save()
+            return redirect('room', pk=player.room.id)
     
     context = {'form':form}
     

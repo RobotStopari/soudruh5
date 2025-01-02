@@ -28,9 +28,9 @@ def auth_user_roomless(view_func):
         if not user.is_authenticated:
             return redirect('index')
         else:
-              
+            
             if user.player.room is None:
-                 return view_func(request, *args, **kwargs)
+                return view_func(request, *args, **kwargs)
             else:
                 return redirect('room', pk=user.player.room.id)
         
@@ -65,7 +65,6 @@ def user_on_move(view_func):
         user = request.user
         user_room = user.player.room.id
         user_on_move = user.player.on_move
-        pk = kwargs['pk']
         
         if not user.is_authenticated:
             return redirect('index')
@@ -75,7 +74,7 @@ def user_on_move(view_func):
                 return redirect('home')
             else:
                 
-                if pk == str(user_room) and user_on_move:
+                if user_on_move:
                     return view_func(request, *args, **kwargs)
                 else:
                     return redirect('room', pk=user_room)

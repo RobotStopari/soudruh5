@@ -1,18 +1,13 @@
-{% extends "game/main.html" %}
+{% extends "game/main.html" %} {% block content %}
+<div class="card p-4 pb-2 bg-light">
 
-{% block content %}
+    <h1>Vítej, soudruhu: {{request.user}}!</h1>
 
-<div class="container d-flex align-items-center justify-content-center" style="height: 100vh;">
-    <div class="row text-center">
-        <div class="col">
-            <h1>Vítej, soudruhu {{request.user}}!</h1>
-            <br>
-            <a class="btn btn-danger" href="{% url 'logout' %}" role="button">Odhlásit se</a>
-            <br><br>
-            <a class="btn btn-success" href="{% url 'create_room' %}" role="button">Založit místnost</a>
-            <a class="btn btn-light" href="{% url 'join_room' %}" role="button">Připojit se do místnosti</a>
-        </div>
+    <div class="btn-group-vertical btn-group-lg text-light mt-3 mb-3" role="group" aria-label="Basic example">
+        <a class="btn btn-outline-success p-3" href="{% url 'create_room' %}" role="button">Založit místnost</a>
+        <a class="btn btn-outline-success p-3" href="{% url 'join_room' %}" role="button">Připojit se do místnosti</a>
     </div>
-</div>
+    <a class="btn btn-danger mb-3" href="{% url 'logout' %}" role="button">Odhlásit se</a>
 
+</div>
 {% endblock content %}
