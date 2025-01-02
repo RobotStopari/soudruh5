@@ -1,36 +1,10 @@
-{% extends "game/room_templ.html" %} {% block content %}
+{% extends "game/room_templ.html" %} {% load static %} {% block content %}
+
+<script src="{% static '/js/messages.js' %}"></script>
+<script src="{% static '/js/main.js' %}"></script>
+
 
 <script>
-    async function reloadRoom() {
-
-        const url = "{% url 'ajax_players' %}"
-        const response = await fetch(url, {
-            method: 'GET',
-        });
-        const data = await response.json();
-        const {
-            players,
-            player_id
-        } = data;
-
-        const player = data.players.find(p => p.id === player_id);
-
-        const div = document.getElementById('players');
-        const kostka = document.getElementById('hod_kostkou');
-        div.innerHTML = '';
-
-        console.log(players)
-
-        for (let p of players) {
-            div.innerHTML += `<p style="font-size: 1.4em;">${p.name} - ${p.pindex}</p>`;
-        }
-
-        if (player.on_move) {
-            kostka.style.display = ""
-        } else {
-            kostka.style.display = "none"
-        }
-    }
     setInterval(reloadRoom, 2000);
     reloadRoom()
 </script>
