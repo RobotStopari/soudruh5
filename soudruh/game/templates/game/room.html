@@ -42,16 +42,23 @@
             <h1>{{room.room_name}}</h1>
         </div>
     </div>
+
     <div class="row text-center justify-content-center">
+
+        <!-- LOGOUT -->
         <div class="col-2">
             <a class="btn btn-danger" href="{% url 'logout' %}" role="button">Odhlásit se</a>
         </div>
+
+        <!-- LEAVE ROOM -->
         <div class="col-2">
             <form action="" method="POST">
                 {% csrf_token %}
                 <input type="submit" value="Opustit" class="btn btn-danger">
             </form>
         </div>
+
+        <!-- ROLL DICE -->
         <div id="hod_kostkou" style="display:none">
             <div class="col-2">
                 <form action="{% url 'cube' %}" method="POST">
@@ -61,6 +68,7 @@
             </div>
         </div>
 
+        
     </div>
     <div class="row text-center">
         <div class="col">

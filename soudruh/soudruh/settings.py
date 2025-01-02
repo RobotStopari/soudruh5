@@ -147,3 +147,7 @@ JAZZMIN_SETTINGS = {
 
     "changeform_format": "single",
 }
+
+DEBUG = True
+
+ALLOWED_HOSTS = ["*"] 
