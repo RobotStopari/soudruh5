@@ -1,23 +1,21 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
-from django.contrib.auth.forms import UserCreationForm
+from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
 
 from random import randint
 
 from .forms import CreateUserForm, RoomForm, SelectRoomForm, LeaveRoomForm, CubeForm
-from .decorators import user_not_auth, auth_user, auth_user_roomless, auth_user_in_room
+from .decorators import user_not_auth, auth_user, auth_user_roomless, auth_user_in_room, user_on_move
 from .models import *
+from .serializers import PlayerSerializer
+
+
+#   USER HANDLING - index, register, login, logout
 
 @user_not_auth
 def index(request):
     return render(request, 'game/index.html')
-
-@auth_user_roomless
-def home(request):
-    return render(request, 'game/home.html')
 
 @user_not_auth
 def registerPage(request):
@@ -65,6 +63,14 @@ def logoutUser(request):
     logout(request)
     return redirect('index')
 
+
+
+#   ROOM HANDLING - home, create room, join room
+
+@auth_user_roomless
+def home(request):
+    return render(request, 'game/home.html')
+
 @auth_user_roomless
 def createRoom(request):        
     form = RoomForm()
@@ -86,6 +92,29 @@ def createRoom(request):
         
         return render(request, 'game/new_room_form.html', context)
     
+@auth_user_roomless
+def join_room(request):
+    form = SelectRoomForm
+    
+    if request.method == 'POST':
+            form = SelectRoomForm(request.POST)
+            if form.is_valid():
+                
+                
+                room = form.cleaned_data.get('room')
+                player = request.user.player
+                player.room = room
+                player.save()
+                return redirect('room', pk=player.room.id)
+    
+    context = {'form':form}
+    
+    return render(request, 'game/join_room.html', context)
+
+
+
+
+#   GAME - room, cube, ajax    
 
 @auth_user_in_room
 def room(request, pk):
@@ -105,43 +134,22 @@ def room(request, pk):
     context = {'room':room, 'players':players, 'player':player}
     return render(request, 'game/room.html', context)
     
-@auth_user
+@user_on_move
 def cube(request):
     form = CubeForm
     player = request.user.player
-    
-    if player.on_move:
         
-        if request.method == 'POST':
-            form = CubeForm(request.POST, instance=request.user.player)
-            
-            if form.is_valid():
-                cube_roll = randint(1, 6)
-                print(cube_roll)
-                player.pindex += cube_roll
-                player.on_move = False
-                player.save()
+    if request.method == 'POST':
+        form = CubeForm(request.POST, instance=request.user.player)
+        
+        if form.is_valid():
+            cube_roll = randint(1, 6)
+            print(cube_roll)
+            player.pindex += cube_roll
+            player.on_move = False
+            player.save()
                     
     return redirect('room', pk=player.room.id)
-    
-@auth_user_roomless
-def join_room(request):
-    form = SelectRoomForm
-    
-    if request.method == 'POST':
-            form = SelectRoomForm(request.POST)
-            if form.is_valid():
-                
-                
-                room = form.cleaned_data.get('room')
-                player = request.user.player
-                player.room = room
-                player.save()
-                return redirect('room', pk=player.room.id)
-    
-    context = {'form':form}
-    
-    return render(request, 'game/join_room.html', context)
     
     
 @auth_user
@@ -149,19 +157,9 @@ def ajax_players(request):
     room = request.user.player.room
     player = request.user.player  
     players = Player.objects.filter(room=room)
-    
-    players_json = [
-        {
-            'id':p.id,
-            'name':p.account.username,
-            'color':p.color,
-            'pindex':p.pindex,
-            'money':p.money,
-            'category':p.category,
-            'on_move':p.on_move,
-            
-        } for p in players]
-    
+
+    players_json = PlayerSerializer(players, many=True).data
+
     return JsonResponse({
         'players': players_json,
         'player_id': player.id,

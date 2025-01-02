@@ -58,3 +58,26 @@ def auth_user_in_room(view_func):
                     return redirect('room', pk=user_room)
         
     return wrapper_func
+
+def user_on_move(view_func):
+        
+    def wrapper_func(request, *args, **kwargs):
+        user = request.user
+        user_room = user.player.room.id
+        user_on_move = user.player.on_move
+        pk = kwargs['pk']
+        
+        if not user.is_authenticated:
+            return redirect('index')
+        else:
+              
+            if user.player.room is None:
+                return redirect('home')
+            else:
+                
+                if pk == str(user_room) and user_on_move:
+                    return view_func(request, *args, **kwargs)
+                else:
+                    return redirect('room', pk=user_room)
+        
+    return wrapper_func
