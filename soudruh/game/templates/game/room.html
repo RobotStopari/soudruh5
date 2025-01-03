@@ -7,12 +7,14 @@
 <script>
     setInterval(reloadRoom, 2000);
     reloadRoom()
+
+    document.getElementById("diceRoll").onclick = console.log('press');
 </script>
 
 
 <nav class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid">
-        <span class="navbar-brand" href="#">{{room.room_name}}</span>
+        <span class="navbar-brand" href="#">{{player.account.username|title}} - {{room.room_name}}</span>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -35,6 +37,11 @@
     </div>
 </nav>
 
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary m-4" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Zobrazit Zprávy
+</button>
+
 
 <div class="container">
     <div class="row text-center d-flex align-items-center" style="height: 90vh;">
@@ -43,15 +50,35 @@
                 <div class="col-lg-6 col-md-7 col-12">
 
                     <div id="hod_kostkou" style="display:none" class="mb-4">
-                        <form action="{% url 'cube' %}" method="POST">
-                            {% csrf_token %}
-                            <input type="submit" value="Hodit kostkou" class="btn btn-lg btn-success">
-                        </form>
+                        <script>
+                            const csrfToken = "{{ csrf_token }}";
+                        </script>
+                        <input id="diceRoll" class="btn btn-success" type="button" value="Hodit kostkou" onclick="rollDice()" />
                     </div>
 
 
                     <h1>Hráči v místnosti:</h1>
                     <div id='players'></div>
+
+
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Moje Zprávy</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div id='messages'></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Zavřít</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
             </div>

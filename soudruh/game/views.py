@@ -3,12 +3,11 @@ from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 
-from random import randint
-
 from .forms import CreateUserForm, RoomForm, SelectRoomForm, LeaveRoomForm, CubeForm
-from .decorators import user_not_auth, auth_user, auth_user_roomless, auth_user_in_room, user_on_move
+from .decorators import *
 from .models import *
-from .serializers import PlayerSerializer
+from .serializers import PlayerSerializer, MessageSerializer
+from .functions import *
 
 
 #   USER HANDLING - index, register, login, logout
@@ -84,7 +83,16 @@ def createRoom(request):
             player = request.user.player
             player.room = room_to_join
             player.is_room_admin = True
+            
+            ResetPlayer(player)
+            
+            player.on_move = True
             player.save()
+            
+            UpdateNumberOfPlayers(room_to_join)
+            
+            room_to_join.actual_player = 1
+            room_to_join.save()
             
             return redirect('room', pk=player.room.id)
         
@@ -106,7 +114,8 @@ def join_room(request):
             
             player = request.user.player
             player.room = room
-            player.save()
+            ResetPlayer(player)
+            UpdateNumberOfPlayers(room)
             return redirect('room', pk=player.room.id)
     
     context = {'form':form}
@@ -128,42 +137,54 @@ def room(request, pk):
 
     if request.method == 'POST':
             form = LeaveRoomForm(request.POST, instance=request.user.player)
-            if form.is_valid():
-                form.save()
+            if form.is_valid():   
+                
+                form.save()             
+                
+                if players.count() < 1:
+                    room.delete()
+                    
                 
                 return redirect('home')
 
     context = {'room':room, 'players':players, 'player':player}
+    
     return render(request, 'game/room.html', context)
     
 @user_on_move
 def cube(request):
     form = CubeForm
     player = request.user.player
+    username = player.account.username.capitalize()
+    room = player.room
         
     if request.method == 'POST':
         form = CubeForm(request.POST, instance=request.user.player)
         
         if form.is_valid():
-            cube_roll = randint(1, 6)
-            print(cube_roll)
-            player.pindex += cube_roll
-            player.on_move = False
-            player.save()
+            
+            dice_roll = RollDice(6)
+            player.pindex += dice_roll
+            SendMessage('dice', (username + ' hodil ' + str(dice_roll) + '.'), player, room)
+            
+            ChangeTurn(player)
                     
-    return redirect('room', pk=player.room.id)
+    return JsonResponse({})
     
     
 @auth_user
-def ajax_players(request):
+def ajax_data(request):
     room = request.user.player.room
     player = request.user.player  
     players = Player.objects.filter(room=room)
+    messages = Message.objects.filter(reciever=player).filter(room=room)
 
     players_json = PlayerSerializer(players, many=True).data
+    messages_json = MessageSerializer(messages, many=True).data
 
     return JsonResponse({
         'players': players_json,
+        'messages': messages_json,
         'player_id': player.id,
     })
     

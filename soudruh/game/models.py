@@ -18,7 +18,8 @@ CATEGORIES = {
 
 class Room(models.Model):
     room_name = models.CharField(max_length=200, null=True)
-    actual_player = models.IntegerField(null=True, blank=True, default=0)
+    actual_player = models.IntegerField(default=0)
+    number_of_players = models.IntegerField(default=0)
     
     game_starting_money = models.IntegerField(null=True, blank=True, default=2000)
     
@@ -60,18 +61,31 @@ class Player(models.Model):
     wait_moves = models.IntegerField(null=True, default=0)
     is_room_admin = models.BooleanField(default=False)
     
-    #def __str__(self):
-     #   return self.account.username
+    def __str__(self):
+       return self.account.username
     
     class Meta:
         verbose_name = 'Player'
         verbose_name_plural = 'Players'
+        
+        
+class Message(models.Model):
+    message = models.CharField(max_length=200, null=True)
+    type = models.CharField(max_length=20, null=True)
+    reciever = models.ForeignKey(Player, on_delete=models.CASCADE, null=True)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True)
+    
+    def __str__(self):
+        return self.message
+    
+    class Meta:
+        verbose_name = 'Message'
+        verbose_name_plural = 'Messages'
 
     
 class Postih(models.Model):
     category = models.CharField(max_length=200, null=True, choices=CATEGORIES)
     message = models.CharField(max_length=2000, null=True, blank=True)
-    code = models.JSONField(null=True, blank=True)
     
     def __str__(self):
         return self.message
@@ -83,7 +97,6 @@ class Postih(models.Model):
 class Vylepseni(models.Model):
     category = models.CharField(max_length=200, null=True, choices=CATEGORIES)
     message = models.CharField(max_length=2000, null=True, blank=True)
-    code = models.JSONField(null=True, blank=True)
     
     def __str__(self):
         return self.message
@@ -91,15 +104,3 @@ class Vylepseni(models.Model):
     class Meta:
         verbose_name = 'Vylepšení'
         verbose_name_plural = 'Vylepšení'
-        
-class Message(models.Model):
-    header = models.CharField(max_length=200, null=True)
-    message = models.CharField(max_length=2000, null=True, blank=True)
-    player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, blank=True)
-    
-    def __str__(self):
-        return self.header
-    
-    class Meta:
-        verbose_name = 'Message'
-        verbose_name_plural = 'Messages'

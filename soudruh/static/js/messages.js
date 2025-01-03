@@ -1,4 +1,4 @@
-const popup = Notification({
+const mes = Notification({
     position: 'top-right',
     duration: 3000,
     isHidePrev: false,

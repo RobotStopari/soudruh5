@@ -43,7 +43,7 @@ class RoomAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             "fields": (
-                'room_name', 'id', 'actual_player',
+                'room_name', 'id', 'actual_player', 'number_of_players',
             ),
         }),
         ('Game', {
@@ -55,7 +55,7 @@ class RoomAdmin(admin.ModelAdmin):
     
     
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ('header', 'id', 'player',)
+    list_display = ('message', 'type', 'reciever', 'room',)
     readonly_fields = ('id',)
     
 
