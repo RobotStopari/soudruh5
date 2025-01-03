@@ -11,7 +11,10 @@
             {{ form.room|add_class:"form-select form-select-lg" }}
 
         </div>
-        <button type="submit" value="Vstoupit" class="btn btn-success btn-lg mb-3">Vstoupit</button>
+        <div class="d-flex justify-content-center" style="gap: 20px">
+            <a class="btn btn-danger btn-lg mb-3" href="{% url 'home' %}">Zpět</a>
+            <button type="submit" value="Vstoupit" class="btn btn-success btn-lg mb-3">Vstoupit</button>
+        </div>
 
     </form>
 </div>

@@ -3,7 +3,7 @@
 <div class="card p-4 pb-2 bg-light">
 
 
-    <h1>Vyber místnost pro připojení</h1>
+    <h1>Založ místnost</h1>
 
 
     <form action="" method="POST" class="mt-3 form-floating">
@@ -13,7 +13,10 @@
             <label for="username">Jméno místnosti</label>
 
         </div>
-        <button type="submit" class="btn btn-success btn-lg mb-3">Založit a vstoupit</button>
+        <div class="d-flex justify-content-center" style="gap: 20px">
+            <a class="btn btn-danger btn-lg mb-3" href="{% url 'home' %}">Zpět</a>
+            <button type="submit" class="btn btn-success btn-lg mb-3">Založit a vstoupit</button>
+        </div>
 
     </form>
 </div>
