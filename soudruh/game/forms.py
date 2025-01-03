@@ -7,7 +7,7 @@ from .models import Room, Player
 
 
 
-class CreateUserForm(UserCreationForm):
+class CreateUserForm(UserCreationForm):    
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']

@@ -23,12 +23,14 @@ def registerPage(request):
     
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
+        color = request.POST.get('color')
         if form.is_valid():
             user = form.save()
             username = form.cleaned_data.get('username')
             
             Player.objects.create(
                 account=user,
+                color=color,
             )
             
             messages.success(request, 'Přibyl k nám soudruh ' + username)
