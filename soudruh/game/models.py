@@ -74,6 +74,7 @@ class Message(models.Model):
     type = models.CharField(max_length=20, null=True)
     reciever = models.ForeignKey(Player, on_delete=models.CASCADE, null=True)
     room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     
     def __str__(self):
         return self.message

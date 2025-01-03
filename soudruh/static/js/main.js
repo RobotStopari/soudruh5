@@ -61,7 +61,7 @@ async function reloadRoom() {
         players_div.innerHTML += `<p style="font-size: 1.4em;">${p.name} - ${p.pindex}</p>`;
     }
 
-    for (let m of messages) {
-        messages_div.innerHTML += `<p>${m.type} - ${m.message}</p>`;
+    for (let i = messages.length - 1; i >= 0; i--) {
+        createMessage(messages[i], messages_div);
     }
 }

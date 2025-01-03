@@ -56,7 +56,7 @@ class RoomAdmin(admin.ModelAdmin):
     
 class MessageAdmin(admin.ModelAdmin):
     list_display = ('message', 'type', 'reciever', 'room',)
-    readonly_fields = ('id',)
+    readonly_fields = ('id', 'created_at',)
     
 
 admin.site.register(Player, PlayerAdmin)
