@@ -1,6 +1,3 @@
-let last_message = 0;
-
-
 async function rollDice() {
     const url = "/cube/";
     const response = await fetch(url, {
@@ -65,4 +62,7 @@ async function reloadRoom() {
     for (let i = history_records.length - 1; i >= 0; i--) {
         createHistoryRecord(history_records[i], history_records_div);
     }
+
+    updateBoard(players)
+    return players;
 }

@@ -1,7 +1,11 @@
 {% extends "game/templ/room_templ.html" %} {% load static %} {% block content %}
 
+<script src="{% static '/js/vars.js' %}"></script>
 <script src="{% static '/js/messages.js' %}"></script>
 <script src="{% static '/js/main.js' %}"></script>
+<script src="{% static '/js/game.js' %}"></script>
+<script src="{% static '/js/board.js' %}"></script>
+
 
 
 <script>
@@ -75,9 +79,8 @@
     </div>
 </div>
 
-
 <div class="container">
-    <div class="row text-center d-flex align-items-center" style="height: 80vh;">
+    <div class="row text-center d-flex align-items-center">
         <div class="col">
             <div class="row justify-content-center">
                 <div class="col-lg-6 col-md-7 col-12">
@@ -89,13 +92,20 @@
                         <input id="diceRoll" class="btn btn-success" type="button" value="Hodit kostkou"
                             onclick="rollDice()" />
                     </div>
-
-
-                    <h1>Hráči v místnosti:</h1>
-                    <div id='players'></div>
-
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div id="board" class="d-flex justify-content-center m-3">
+            </div>
+        </div>
+    </div>
+    <div class="row text-center d-flex align-items-center">
+        <div class="col">
+            <h1>Hráči v místnosti:</h1>
+            <div id='players'></div>
         </div>
     </div>
 </div>
