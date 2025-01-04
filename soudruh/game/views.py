@@ -6,10 +6,11 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import CreateUserForm, RoomForm, SelectRoomForm, LeaveRoomForm, CubeForm
 from .decorators import *
 from .models import *
-from .serializers import PlayerSerializer, MessageSerializer
+from .serializers import *
 from .func.game_func import *
 from .func.room_func import *
 
+from datetime import datetime
 
 
 #   USER HANDLING - index, register, login, logout
@@ -91,6 +92,7 @@ def createRoom(request):
             player.room = room_to_join
             player.is_room_admin = True
             player.on_move = True
+            player.joined_room_at = datetime.now()
             player.save()
             
             
@@ -178,7 +180,9 @@ def cube(request):
             
             dice_roll = RollDice(6)
             player.pindex += dice_roll
-            SendMessage('dice', (username + ' hodil ' + str(dice_roll) + '.'), player, room)
+            
+            AddHistoryRecord(username + ' hodil ' + str(dice_roll) + '.', room)
+            #SendMessage('dice', (username + ' hodil ' + str(dice_roll) + '.'), player, room)
             
             ChangeTurn(player)
                     
@@ -190,14 +194,14 @@ def ajax_data(request):
     room = request.user.player.room
     player = request.user.player  
     players = Player.objects.filter(room=room)
-    messages = Message.objects.filter(reciever=player).filter(room=room)
+    history_records = History.objects.filter(room=room)
 
     players_json = PlayerSerializer(players, many=True).data
-    messages_json = MessageSerializer(messages, many=True).data
+    history_records_json = HistoryRecordSerializer(history_records, many=True).data
     
     return JsonResponse({
         'players': players_json,
-        'messages': messages_json,
+        'history_records': history_records_json,
         'player_id': player.id,
     })
     

@@ -9,12 +9,12 @@ admin.site.site_title = 'Soudruh Admin'
 class PlayerAdmin(admin.ModelAdmin):
     list_display = ('account', 'id', 'room', 'category', 'pindex', 'money')
     
-    readonly_fields = ('id',)
+    readonly_fields = ('account', 'id', 'joined_room_at', 'last_notification_read', 'active', 'on_move')
     
     fieldsets = (
         (None, {
             "fields": (
-                'account', 'color', 'room', 'id',
+                'account', 'color', 'room', 'id', 'joined_room_at', 'last_notification_read',
             ),
         }),
         ('Game Data', {
@@ -38,7 +38,7 @@ class PlayerAdmin(admin.ModelAdmin):
 class RoomAdmin(admin.ModelAdmin):
     list_display = ('room_name', 'id', 'actual_player',)
     
-    readonly_fields = ('id',)
+    readonly_fields = ('id', 'number_of_players')
     
     fieldsets = (
         (None, {
@@ -54,8 +54,13 @@ class RoomAdmin(admin.ModelAdmin):
     )
     
     
-class MessageAdmin(admin.ModelAdmin):
+class NotificationAdmin(admin.ModelAdmin):
     list_display = ('message', 'type', 'reciever', 'room',)
+    readonly_fields = ('id', 'created_at',)
+    
+    
+class HistoryAdmin(admin.ModelAdmin):
+    list_display = ('message', 'room',)
     readonly_fields = ('id', 'created_at',)
     
 
@@ -63,6 +68,8 @@ admin.site.register(Player, PlayerAdmin)
 admin.site.register(Room, RoomAdmin)
 admin.site.register(Postih)
 admin.site.register(Vylepseni)
-admin.site.register(Message, MessageAdmin)
+admin.site.register(Notification, NotificationAdmin)
+admin.site.register(History, HistoryAdmin)
+
 
 admin.site.unregister(Group)

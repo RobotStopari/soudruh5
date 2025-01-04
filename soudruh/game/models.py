@@ -36,6 +36,8 @@ class Player(models.Model):
     
     account = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True, blank=True)
+    joined_room_at = models.DateTimeField(null=True)
+    last_notification_read = models.IntegerField(null=True, default=0)
     
     #player
     color = ColorField(default='#FF0000', null=True)
@@ -69,7 +71,19 @@ class Player(models.Model):
         verbose_name_plural = 'Players'
         
         
-class Message(models.Model):
+class History(models.Model):
+    message = models.CharField(max_length=200, null=True)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    
+    def __str__(self):
+        return self.message
+    
+    class Meta:
+        verbose_name = 'History Record'
+        verbose_name_plural = 'History Records'
+        
+class Notification(models.Model):
     message = models.CharField(max_length=200, null=True)
     type = models.CharField(max_length=20, null=True)
     reciever = models.ForeignKey(Player, on_delete=models.CASCADE, null=True)
@@ -80,8 +94,8 @@ class Message(models.Model):
         return self.message
     
     class Meta:
-        verbose_name = 'Message'
-        verbose_name_plural = 'Messages'
+        verbose_name = 'Notification'
+        verbose_name_plural = 'Notifications'
 
     
 class Postih(models.Model):

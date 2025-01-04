@@ -17,12 +17,12 @@ function formatDateTime(isoString) {
     return `${day}. ${month}. ${hours}:${minutes}`;
 }
 
-function createMessage(m, messages_div) {
-    messages_div.innerHTML +=
+function createHistoryRecord(h, history_records_div) {
+    history_records_div.innerHTML +=
         `<div class="alert alert-primary d-flex align-items-center" role="alert">
             <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
             <div>
-                ${formatDateTime(m.created_at)} - ${m.message} 
+                ${formatDateTime(h.created_at)} - ${h.message} 
             </div>
         </div>`;
 }

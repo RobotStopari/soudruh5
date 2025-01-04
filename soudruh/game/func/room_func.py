@@ -1,6 +1,9 @@
-from ..models import Player, Message
+from ..models import *
 
 def ResetPlayer(player): # vyresetuj data hráče
+    player.joined_room_at = None
+    player.last_notification_read = 0
+    
     player.pindex = 0
     player.money = 0
     player.category = '1-BEZ'
@@ -54,6 +57,8 @@ def CheckPlayerOnMoveForErrors(room): # porovná, kdo je opravdu na tahu a kdo m
     room_players = Player.objects.filter(room=room) # kolik je hráčů v místnosti
     player_on_move = room_players.filter(on_move=True) # kolik je hráčů v místnosti na tahu
     actual_player = room.actual_player # kdo je podle místnosti aktuálně na tahu
+    
+    print(player_on_move)
     
     if player_on_move.count() > 1: # pokud je na tahu víc než jeden hráč najednou
         for player in room_players: # každému hráči je řečeno, že není na tahu
