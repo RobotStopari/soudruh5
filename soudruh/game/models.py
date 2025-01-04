@@ -2,7 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from colorfield.fields import ColorField
-from django.conf import settings
+
+from djsingleton.models import SingletonModel, SingletonActiveModel
+
+class Config(SingletonModel):
+    cube_size = models.IntegerField(default=6)
 
 CATEGORIES = {
         ('1-BEZ', 'Bezpartijní'),
@@ -13,8 +17,6 @@ CATEGORIES = {
         ('6-POL', 'Člen Politbyra ÚV'),
         ('7-GEN', 'Generální Tajemník ÚV Strany'),
         }
-
-
 
 class Room(models.Model):
     room_name = models.CharField(max_length=200, null=True)

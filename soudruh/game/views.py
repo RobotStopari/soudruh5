@@ -13,6 +13,11 @@ from .func.room_func import *
 from datetime import datetime
 
 
+config = Config.objects.get(id=1)
+
+cube_size = config.cube_size
+
+
 #   USER HANDLING - index, register, login, logout
 
 @user_not_auth
@@ -178,7 +183,7 @@ def cube(request):
         
         if form.is_valid():
             
-            dice_roll = RollDice(6)
+            dice_roll = RollDice(cube_size)
             player.pindex += dice_roll
             
             AddHistoryRecord(username + ' hodil ' + str(dice_roll) + '.', room)
