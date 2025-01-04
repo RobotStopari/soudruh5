@@ -7,7 +7,9 @@ from .forms import CreateUserForm, RoomForm, SelectRoomForm, LeaveRoomForm, Cube
 from .decorators import *
 from .models import *
 from .serializers import PlayerSerializer, MessageSerializer
-from .functions import *
+from .func.game_func import *
+from .func.room_func import *
+
 
 
 #   USER HANDLING - index, register, login, logout
@@ -83,18 +85,19 @@ def createRoom(request):
             
             room_to_join = Room.objects.last()
             player = request.user.player
-            player.room = room_to_join
-            player.is_room_admin = True
             
             ResetPlayer(player)
             
+            player.room = room_to_join
+            player.is_room_admin = True
             player.on_move = True
             player.save()
             
-            UpdateNumberOfPlayers(room_to_join)
             
             room_to_join.actual_player = 1
             room_to_join.save()
+            
+            CheckPlayerOnMoveForErrors(room_to_join)
             
             return redirect('room', pk=player.room.id)
         
@@ -115,9 +118,13 @@ def join_room(request):
                 return redirect('join_room')
             
             player = request.user.player
-            player.room = room
+            
             ResetPlayer(player)
-            UpdateNumberOfPlayers(room)
+            player.room = room
+            player.save()
+            
+            CheckPlayerOnMoveForErrors(room)
+            
             return redirect('room', pk=player.room.id)
     
     context = {'form':form}
@@ -135,13 +142,17 @@ def room(request, pk):
     room = Room.objects.get(id=pk)
     players = Player.objects.filter(room=room)
     
+    CheckPlayerOnMoveForErrors(room)
+    
     form = LeaveRoomForm
 
     if request.method == 'POST':
             form = LeaveRoomForm(request.POST, instance=request.user.player)
             if form.is_valid():   
                 
-                form.save()             
+                form.save() 
+                
+                ResetPlayer(player)            
                 
                 if players.count() < 1:
                     room.delete()
@@ -183,7 +194,7 @@ def ajax_data(request):
 
     players_json = PlayerSerializer(players, many=True).data
     messages_json = MessageSerializer(messages, many=True).data
-
+    
     return JsonResponse({
         'players': players_json,
         'messages': messages_json,

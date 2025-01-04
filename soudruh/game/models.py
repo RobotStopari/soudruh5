@@ -23,7 +23,7 @@ class Room(models.Model):
     
     game_starting_money = models.IntegerField(null=True, blank=True, default=2000)
     
-    def __str__(self):
+    def __str__(self):        
         return self.room_name
     
     class Meta:

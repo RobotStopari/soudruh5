@@ -1,5 +1,6 @@
 let last_message = 0;
 
+
 async function rollDice() {
     const url = "/cube/";
     const response = await fetch(url, {
