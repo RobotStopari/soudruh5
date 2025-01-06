@@ -39,7 +39,8 @@ async function reloadRoom() {
     history_records_div.innerHTML = '';
 
 
-    console.log('Ajax successful')
+    console.log(players);
+    console.log(history_records);
 
     /*if (messages.length > last_message) {
         incoming_message = messages[messages.length - 1];

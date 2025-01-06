@@ -43,7 +43,7 @@ def ChangeTurn(player): # změň hráče na tahu na dalšího
     player.on_move = False
     player.save() # hráč na tahu už není na tahu
     
-    players_in_room = Player.objects.filter(room=room) # kolik je hráčů v místnosti
+    players_in_room = Player.objects.filter(room=room).order_by('joined_room_at') # kolik je hráčů v místnosti
     room.actual_player = NextPlayerOnMove(players_in_room.count(), room.actual_player) 
     room.save() # hráč na tahu podle místnosti je další hráč v pořadí podle funkce
     
@@ -54,7 +54,7 @@ def ChangeTurn(player): # změň hráče na tahu na dalšího
 def CheckPlayerOnMoveForErrors(room): # porovná, kdo je opravdu na tahu a kdo má podle místnosti být na tahu
     UpdateNumberOfPlayers(room) # nastaví room_players na počet hráčů v místnosti
     
-    room_players = Player.objects.filter(room=room) # kolik je hráčů v místnosti
+    room_players = Player.objects.filter(room=room).order_by('joined_room_at') # kolik je hráčů v místnosti
     player_on_move = room_players.filter(on_move=True) # kolik je hráčů v místnosti na tahu
     actual_player = room.actual_player # kdo je podle místnosti aktuálně na tahu
     
@@ -66,7 +66,7 @@ def CheckPlayerOnMoveForErrors(room): # porovná, kdo je opravdu na tahu a kdo m
             player.save()
         print('Na tahu bylo najednou více, než jeden hráč.') # spustí následující if (na tahu je 0 hráčů)
     
-    if player_on_move.count() < 1: # pokud podle místnosti nikdo není na tahu
+    if player_on_move.count() < 1: # pokud nikdo není na tahu
         first_in_room = room_players.first()
         first_in_room.on_move = True
         first_in_room.save()
@@ -75,8 +75,10 @@ def CheckPlayerOnMoveForErrors(room): # porovná, kdo je opravdu na tahu a kdo m
     if not (1 <= room.actual_player <= room.number_of_players): # pokud aktuální hráč podle místnosti není v rozmezí počtu hráčů v místnosti
         room.actual_player = room.number_of_players
         room.save()
+        actual_player = room.actual_player
         print('Aktuální hráč podle místnosti není v rozmezí počtu hráčů v místnosti. Nyní je na tahu poslední hráč v místnosti.') # nastav posledního hráče v místnosti na na tahu
         
+    player_on_move = room_players.filter(on_move=True)
     room_players_list = list(room_players) # převede hráče v místnosti na seznam
     player_on_move_position = room_players_list.index(player_on_move.first()) + 1 # uloží pozici hráče, který je aktuálně na tahu
     

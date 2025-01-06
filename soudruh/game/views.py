@@ -128,6 +128,7 @@ def join_room(request):
             
             ResetPlayer(player)
             player.room = room
+            player.joined_room_at = datetime.now()
             player.save()
             
             CheckPlayerOnMoveForErrors(room)
@@ -147,25 +148,25 @@ def join_room(request):
 def room(request, pk):
     player = request.user.player
     room = Room.objects.get(id=pk)
-    players = Player.objects.filter(room=room)
-    
-    CheckPlayerOnMoveForErrors(room)
+    players = Player.objects.filter(room=room).order_by('joined_room_at')
     
     form = LeaveRoomForm
-
+    
     if request.method == 'POST':
-            form = LeaveRoomForm(request.POST, instance=request.user.player)
-            if form.is_valid():   
+        
+        ChangeTurn(player)
+            
+        form = LeaveRoomForm(request.POST, instance=request.user.player)
+        if form.is_valid():  
+            
+            form.save()  
                 
-                form.save() 
-                
-                ResetPlayer(player)            
-                
-                if players.count() < 1:
-                    room.delete()
-                    
-                
-                return redirect('home')
+            if players.count() < 1:
+                room.delete()
+            else:
+                CheckPlayerOnMoveForErrors(room)
+            
+            return redirect('home')
 
     context = {'room':room, 'players':players, 'player':player}
     
@@ -195,10 +196,12 @@ def cube(request):
     
     
 @auth_user
-def ajax_data(request):
+def ajax_data(request): 
     room = request.user.player.room
     player = request.user.player  
-    players = Player.objects.filter(room=room)
+    
+    players = Player.objects.filter(room=room).order_by('joined_room_at')
+    print(players)
     history_records = History.objects.filter(room=room)
 
     players_json = PlayerSerializer(players, many=True).data
