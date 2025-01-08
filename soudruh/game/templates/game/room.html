@@ -2,16 +2,7 @@
 
 <script src="{% static '/js/vars.js' %}"></script>
 <script src="{% static '/js/messages.js' %}"></script>
-<script src="{% static '/js/main.js' %}"></script>
-<script src="{% static '/js/game.js' %}"></script>
-<script src="{% static '/js/board.js' %}"></script>
-
-
-
-<script>
-    setInterval(reloadRoom, 3000);
-    reloadRoom()
-</script>
+<script src="{% static '/js/figs.js' %}"></script>
 
 
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -29,8 +20,88 @@
     </symbol>
 </svg>
 
+<div class="d-flex justify-content-center" style="width: 100vv;">
+    <button type="button" class="btn btn-primary m-4" data-bs-toggle="modal" data-bs-target="#mainModal"
+        style="position: absolute; margin-top: 31px !important;">
+        MENU
+    </button>
+</div>
 
-<nav class="navbar navbar-expand-lg bg-light">
+<style>
+    @keyframes pulseAndColor {
+        0% {
+            transform: scale(1);
+            background-color: #28a745;
+            /* Original success green */
+        }
+
+        50% {
+            transform: scale(1.1);
+            /* Slightly larger */
+            background-color: #d09434;
+            /* Lighter green */
+        }
+
+        100% {
+            transform: scale(1);
+            background-color: #28a745;
+            /* Back to original green */
+        }
+    }
+
+    #diceRoll {
+        animation: pulseAndColor 1.5s infinite;
+        /* Adjust duration as needed */
+    }
+</style>
+
+
+
+<div id="hod_kostkou" style="display:none; position: absolute;" class="m-4">
+    <script>
+        const csrfToken = "{{ csrf_token }}";
+    </script>
+    <input id="diceRoll" class="btn btn-success" type="button" value="Hodit kostkou" onclick="rollDice()" />
+</div>
+
+
+
+<!--<div class="row" style="min-width: 100%; position: absolute;">
+    <div class="col-2">
+        <button type="button" class="btn btn-primary m-4" data-bs-toggle="modal"
+            data-bs-target="#exampleModal" style="position: relative; align-self: start;">
+            Zobrazit Zprávy
+        </button>
+    </div>
+    <div class="col-8"></div>
+    <div class="col-2 d-flex flex-wrap justify-content-end">
+        <h1>{{player.account.username|title}} - {{room.room_name}}</h1>
+        <button type="button" class="btn btn-danger m-4" data-bs-toggle="modal" data-bs-target="#exampleModal"
+            style="position: relative;">
+            Opustit místnost
+        </button>
+    </div>
+</div>-->
+
+<div class="m-1 d-flex justify-content-center">
+    <canvas id="game"
+        style="max-height: 95vh; max-width: 100%; background-color: rgb(244, 244, 244); border: rgb(228, 228, 228) solid 1px; border-radius: 10px;"
+        class="m-3 p-md-3">
+        <img src="{% static '/images/board.png' %}" alt="gameboard" id="gameboard">
+        <img src="{% static '/images/fig3.png' %}" alt="fig" id="fig">
+    </canvas>
+</div>
+
+<script src="{% static '/js/camera.js' %}"></script>
+<script src="{% static '/js/ajax.js' %}"></script>
+
+<script>
+    setInterval(reloadRoom, 1000);
+    reloadRoom()
+</script>
+
+
+<!--<nav class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid">
         <span class="navbar-brand" href="#">{{player.account.username|title}} - {{room.room_name}}</span>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -54,14 +125,39 @@
             </ul>
         </div>
     </div>
-</nav>
-
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary m-4" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    Zobrazit Zprávy
-</button>
+</nav>-->
 
 <!-- Modal -->
+<div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="emainModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Hlavní Menu</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-primary m-4" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal" style="position: relative; align-self: start;">
+                        Herní deník
+                    </button>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <a class="btn btn-danger m-3" aria-current="page" href="{% url 'logout' %}" role="button">Odhlásit
+                        se</a>
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="Opustit místnost" class="btn btn-danger m-3">
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Zavřít</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
@@ -75,37 +171,6 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Zavřít</button>
             </div>
-        </div>
-    </div>
-</div>
-
-<div class="container">
-    <div class="row text-center d-flex align-items-center">
-        <div class="col">
-            <div class="row justify-content-center">
-                <div class="col-lg-6 col-md-7 col-12">
-
-                    <div id="hod_kostkou" style="display:none" class="mb-4">
-                        <script>
-                            const csrfToken = "{{ csrf_token }}";
-                        </script>
-                        <input id="diceRoll" class="btn btn-success" type="button" value="Hodit kostkou"
-                            onclick="rollDice()" />
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div id="board" class="d-flex justify-content-center m-3">
-            </div>
-        </div>
-    </div>
-    <div class="row text-center d-flex align-items-center">
-        <div class="col">
-            <h1>Hráči v místnosti:</h1>
-            <div id='players'></div>
         </div>
     </div>
 </div>
