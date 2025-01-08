@@ -56,10 +56,11 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Hlavní Menu</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Místnost: {{ room }}</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <h2 class="text-center">Soudruh: {{ player }}</h2>
                 <div class="d-flex justify-content-center">
                     <button type="button" class="btn btn-primary m-4" data-bs-toggle="modal"
                         data-bs-target="#exampleModal" style="position: relative; align-self: start;">
