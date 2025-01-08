@@ -1,4 +1,59 @@
-.paper-texture{
-    background-image: url(../images/pozadi.jpg);
-    height: 100vh;
+@keyframes pulseAndColor {
+    0% {
+        transform: scale(1);
+        background-color: #28a745;
+        /* Original success green */
+    }
+    50% {
+        transform: scale(1.1);
+        /* Slightly larger */
+        background-color: #d09434;
+        /* Lighter green */
+    }
+    100% {
+        transform: scale(1);
+        background-color: #28a745;
+        /* Back to original green */
+    }
+}
+
+#diceRoll {
+    animation: pulseAndColor 1.5s infinite;
+    /* Adjust duration as needed */
+}
+
+#menu-container {
+    position: absolute;
+    top: 0;
+    margin: auto;
+    width: 100%;
+}
+
+#hod_kostkou {
+    position: absolute;
+    top: 0;
+    margin: auto;
+    width: 100%
+}
+
+#hod_kostkou input {
+    margin: 31px 0px 0px 40px;
+}
+
+@media only screen and (max-width: 940px) {
+    #menu-container {
+        position: relative;
+    }
+    #menu-container button {
+        margin-top: 0px !important;
+    }
+    #hod_kostkou {
+        position: relative;
+        margin: 0px !important;
+        display: flex;
+        justify-content: center;
+    }
+    #hod_kostkou input {
+        margin: 10px;
+    }
 }
