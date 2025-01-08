@@ -1,11 +1,3 @@
-const mes = Notification({
-    position: 'top-right',
-    duration: 3000,
-    isHidePrev: false,
-    isHideTitle: true,
-    maxOpened: 3,
-});
-
 function formatDateTime(isoString) {
     const date = new Date(isoString);
 
@@ -17,12 +9,94 @@ function formatDateTime(isoString) {
     return `${day}. ${month}. ${hours}:${minutes}`;
 }
 
+function displayNotification(notifications, i) {
+    const top = Notification({
+        position: 'top-right',
+        duration: 3000,
+        isHidePrev: false,
+        isHideTitle: true,
+        maxOpened: 3,
+    });
+
+    const mid = Notification({
+        position: 'center',
+        duration: 4000,
+        isHidePrev: false,
+        isHideTitle: true,
+        maxOpened: 3,
+    });
+
+    switch (notifications[i].type) {
+        case 'dice':
+            top.info({
+                message: notifications[i].message,
+            });
+            break;
+        case 'leave':
+        case 'join':
+            top.warning({
+                message: notifications[i].message,
+            });
+            break;
+        case 'sad':
+            mid.dialog({
+                message: notifications[i].message,
+            });
+            break;
+        case 'happy':
+            mid.dialog({
+                message: notifications[i].message,
+            });
+    }
+}
+
 function createHistoryRecord(h, history_records_div) {
-    history_records_div.innerHTML +=
-        `<div class="alert alert-primary d-flex align-items-center" role="alert">
-            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
-            <div>
-                ${formatDateTime(h.created_at)} - ${h.message} 
-            </div>
-        </div>`;
+    switch (h.type) {
+        case 'dice':
+            history_records_div.innerHTML +=
+                `<div class="alert alert-primary d-flex align-items-center" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
+                <div>
+                    ${formatDateTime(h.created_at)} - ${h.message} 
+                </div>
+            </div>`;
+            break;
+        case 'move':
+            history_records_div.innerHTML +=
+                `<div class="alert alert-secondary d-flex align-items-center" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
+                <div>
+                    ${formatDateTime(h.created_at)} - ${h.message} 
+                </div>
+            </div>`;
+            break;
+        case 'join':
+        case 'leave':
+            history_records_div.innerHTML +=
+                `<div class="alert alert-warning d-flex align-items-center" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                <div>
+                    ${formatDateTime(h.created_at)} - ${h.message} 
+                </div>
+            </div>`;
+            break;
+        case 'sad':
+            history_records_div.innerHTML +=
+                `<div class="alert alert-danger d-flex align-items-center" role="alert">
+                    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                    <div>
+                        ${formatDateTime(h.created_at)} - ${h.message} 
+                    </div>
+                </div>`;
+            break;
+        case 'happy':
+            history_records_div.innerHTML +=
+                `<div class="alert alert-success d-flex align-items-center" role="alert">
+                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                        <div>
+                            ${formatDateTime(h.created_at)} - ${h.message} 
+                        </div>
+                    </div>`;
+            break;
+    }
 }

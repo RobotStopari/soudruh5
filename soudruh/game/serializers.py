@@ -13,6 +13,12 @@ class HistoryRecordSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = History
-        fields = ['id', 'message', 'room', 'created_at']
+        fields = ['id', 'message', 'type', 'room', 'created_at']
+        
+class NotificationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Notification
+        fields = ['id', 'message', 'type', 'reciever', 'room', 'created_at']
         
 

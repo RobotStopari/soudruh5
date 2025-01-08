@@ -75,6 +75,7 @@ class Player(models.Model):
         
 class History(models.Model):
     message = models.CharField(max_length=200, null=True)
+    type = models.CharField(max_length=20, default='dice')
     room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     
@@ -87,7 +88,7 @@ class History(models.Model):
         
 class Notification(models.Model):
     message = models.CharField(max_length=200, null=True)
-    type = models.CharField(max_length=20, null=True)
+    type = models.CharField(max_length=20, default='dice')
     reciever = models.ForeignKey(Player, on_delete=models.CASCADE, null=True)
     room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)

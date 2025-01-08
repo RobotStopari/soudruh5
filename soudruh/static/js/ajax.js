@@ -28,7 +28,8 @@ async function reloadRoom() {
     const {
         players,
         history_records,
-        player_id
+        player_id,
+        notifications
     } = data;
 
     const player = data.players.find(p => p.id === player_id);
@@ -37,19 +38,17 @@ async function reloadRoom() {
     const cube = document.getElementById('hod_kostkou');
     history_records_div.innerHTML = '';
 
-    /*if (messages.length > last_message) {
-        incoming_message = messages[messages.length - 1];
-        last_message = incoming_message.id;
-        mes.info({
-            message: incoming_message.message,
-        });
-    }*/
+    for (let i = notifications.length - 1; i >= 0; i--) {
+        displayNotification(notifications, i)
+    }
 
     if (player.on_move) {
         cube.style.display = ""
     } else {
         cube.style.display = "none"
     }
+
+    console.log(history_records.length)
 
     for (let i = history_records.length - 1; i >= 0; i--) {
         createHistoryRecord(history_records[i], history_records_div);

@@ -99,13 +99,13 @@ function drawFigOnBoard(player, offscreenCanvas) {
     // Determine where to draw the player's figure
     if (pindex === 0) {
         ctx.drawImage(offscreenCanvas, 15.5 * a - a + fig_ah, 11.5 * a - a + fig_av, (fig_h / fig.height) * fig.width, fig_h);
-        ctx.fillText(nameText, 15.5 * a - a / 2, 10.5 * a - a + fig_av - 5); // Draw the name above the figure
+        ctx.fillText(nameText, 15.5 * a - a / 2, 11.5 * a - a + fig_av - 5); // Draw the name above the figure
     } else if (pindex === 1000) {
         ctx.drawImage(offscreenCanvas, 13 * a - a + fig_ah, 11 * a - a + fig_av, (fig_h / fig.height) * fig.width, fig_h);
-        ctx.fillText(nameText, 13 * a - a / 2, 10 * a - a + fig_av - 5);
+        ctx.fillText(nameText, 13 * a - a / 2, 11 * a - a + fig_av - 5);
     } else if (pindex === 1001) {
         ctx.drawImage(offscreenCanvas, 10 * a - a + fig_ah, 11 * a - a + fig_av, (fig_h / fig.height) * fig.width, fig_h);
-        ctx.fillText(nameText, 10 * a - a / 2, 10 * a - a + fig_av - 5);
+        ctx.fillText(nameText, 10 * a - a / 2, 11 * a - a + fig_av - 5);
     } else {
         for (let i = 1; i < pindex; i++) {
             if (CORNERS.includes(i)) {

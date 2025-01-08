@@ -2,7 +2,6 @@ from ..models import *
 
 def ResetPlayer(player): # vyresetuj data hráče
     player.joined_room_at = None
-    player.last_notification_read = 0
     
     player.pindex = 0
     player.money = 0

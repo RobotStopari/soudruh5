@@ -15,8 +15,6 @@ from datetime import datetime
 
 config = Config.objects.get(id=1)
 
-cube_size = config.cube_size
-
 
 #   USER HANDLING - index, register, login, logout
 
@@ -120,6 +118,7 @@ def join_room(request):
         form = SelectRoomForm(request.POST)
         if form.is_valid():
             room = form.cleaned_data.get('room')
+            players = Player.objects.filter(room=room)
             
             if room == None:
                 return redirect('join_room')
@@ -132,6 +131,12 @@ def join_room(request):
             player.save()
             
             CheckPlayerOnMoveForErrors(room)
+            
+            AddHistoryRecord('Soudruh ' + player.account.username.capitalize() + ' se připojil do strany.', 'join', room)
+            
+            for pl in players:
+                if not pl == player:
+                    NewNotification('Soudruh ' + player.account.username.capitalize() + ' se připojil do strany.', 'join', pl, room)
             
             return redirect('room', pk=player.room.id)
     
@@ -165,6 +170,12 @@ def room(request, pk):
                 room.delete()
             else:
                 CheckPlayerOnMoveForErrors(room)
+                
+                AddHistoryRecord('Soudruh ' + player.account.username.capitalize() + ' nás opustil.', 'leave', room)
+                
+                for pl in players:
+                    if not pl == player:
+                        NewNotification('Soudruh ' + player.account.username.capitalize() + ' nás opustil.', 'leave', pl, room)
             
             return redirect('home')
 
@@ -178,6 +189,8 @@ def cube(request):
     player = request.user.player
     username = player.account.username.capitalize()
     room = player.room
+    
+    cube_size = config.cube_size
         
     if request.method == 'POST':
         form = CubeForm(request.POST, instance=request.user.player)
@@ -186,11 +199,18 @@ def cube(request):
             
             dice_roll = RollDice(cube_size)
             player.pindex += dice_roll
+            player.save()
             
-            AddHistoryRecord(username + ' hodil ' + str(dice_roll) + '.', room)
-            #SendMessage('dice', (username + ' hodil ' + str(dice_roll) + '.'), player, room)
+            CheckForSpecialPlaces(player.pindex, player, room)
+            
+            AddHistoryRecord(username.capitalize() + ' hodil ' + str(dice_roll) + '.', 'dice', room)
+            NewNotification('Hodil jsi ' + str(dice_roll) + '.', 'dice', player, room)
             
             ChangeTurn(player)
+            
+            new_player = Player.objects.filter(room=room).filter(on_move=True).first()
+            
+            AddHistoryRecord('Na tahu je ' + new_player.account.username.capitalize() + '.', 'move', room)
                     
     return JsonResponse({})
     
@@ -201,16 +221,24 @@ def ajax_data(request):
     player = request.user.player  
     
     players = Player.objects.filter(room=room).order_by('joined_room_at')
-    print(players)
     history_records = History.objects.filter(room=room)
+    
+    notifications = Notification.objects.filter(
+    room=room,
+    reciever=player,
+    id__gt=player.last_notification_read)
 
     players_json = PlayerSerializer(players, many=True).data
     history_records_json = HistoryRecordSerializer(history_records, many=True).data
+    notifications_json = NotificationSerializer(notifications, many=True).data
     
+    if notifications:
+        player.last_notification_read = notifications.last().id
+        player.save()
+        
     return JsonResponse({
         'players': players_json,
         'history_records': history_records_json,
         'player_id': player.id,
+        'notifications': notifications_json,
     })
-    
-    
