@@ -18,6 +18,11 @@ CATEGORIES = {
         ('7-GEN', 'Generální Tajemník ÚV Strany'),
         }
 
+EFFECTS = {
+        ('happy', 'Vylepšení'),
+        ('sad', 'Postih'),
+        }
+
 class Room(models.Model):
     room_name = models.CharField(max_length=200, null=True)
     actual_player = models.IntegerField(default=0)
@@ -101,24 +106,37 @@ class Notification(models.Model):
         verbose_name_plural = 'Notifications'
 
     
-class Postih(models.Model):
+class Effect(models.Model):
+    type = models.CharField(max_length=200, null=True, choices=EFFECTS)
+    
     category = models.CharField(max_length=200, null=True, choices=CATEGORIES)
-    message = models.CharField(max_length=2000, null=True, blank=True)
+    notification_message = models.CharField(max_length=2000, null=True, blank=True)
+    history_record_message_p1 = models.CharField(max_length=2000, null=True, blank=True)
+    history_record_message_p2 = models.CharField(max_length=2000, null=True, blank=True)
+    
+    pindex_change_by = models.IntegerField(null=True, default=0)
+    pindex_set_to = models.IntegerField(null=True, default=0)
+    money_change_by = models.IntegerField(null=True, default=0)
+    wait_moves_set_to = models.IntegerField(null=True, default=0)
+    
+    give_stalin = models.BooleanField(default=False)
+    give_propustka = models.BooleanField(default=False)
+    give_proverka = models.BooleanField(default=False)
+    give_nuzky = models.BooleanField(default=False)
+    give_vesta = models.BooleanField(default=False)
+    give_plan_zaminovani = models.BooleanField(default=False)
+    
+    give_everybody = models.IntegerField(null=True, default=0)
+    remove_from_everybody = models.IntegerField(null=True, default=0)
+    money_change_by_per_player = models.IntegerField(null=True, default=0)
+    
+    go_to_vezeni = models.BooleanField(default=False)
+    go_to_blazinec = models.BooleanField(default=False)
+    go_to_start = models.BooleanField(default=False)
     
     def __str__(self):
-        return self.message
+        return self.notification_message
     
     class Meta:
-        verbose_name = 'Postih'
-        verbose_name_plural = 'Postihy'
-    
-class Vylepseni(models.Model):
-    category = models.CharField(max_length=200, null=True, choices=CATEGORIES)
-    message = models.CharField(max_length=2000, null=True, blank=True)
-    
-    def __str__(self):
-        return self.message
-    
-    class Meta:
-        verbose_name = 'Vylepšení'
-        verbose_name_plural = 'Vylepšení'
+        verbose_name = 'Efekt'
+        verbose_name_plural = 'Efekty'

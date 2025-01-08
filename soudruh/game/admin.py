@@ -64,11 +64,45 @@ class HistoryAdmin(admin.ModelAdmin):
     list_display = ('message', 'room',)
     readonly_fields = ('id', 'created_at',)
     
+class EffectAdmin(admin.ModelAdmin):
+    list_display = ('type', 'category', 'notification_message')
+    
+    fieldsets = (
+        ('Settings', {
+            "fields": (
+                'type', 'category',
+            ),
+        }),
+        ('Messages', {
+            "fields": (
+                'notification_message', 'history_record_message_p1', 'history_record_message_p2',
+            ),
+        }),
+        ('Changes', {
+            "fields": (
+                'pindex_change_by', 'pindex_set_to', 'money_change_by', 'wait_moves_set_to',
+            ),
+        }),
+        ('Equipment', {
+            "fields": (
+                'give_stalin', 'give_propustka', 'give_proverka', 'give_nuzky', 'give_vesta', 'give_plan_zaminovani',
+            ),
+        }),
+        ('Other Players', {
+            "fields": (
+                'give_everybody', 'remove_from_everybody', 'money_change_by_per_player',
+            ),
+        }),
+        ('Go To', {
+            "fields": (
+                'go_to_vezeni', 'go_to_blazinec', 'go_to_start',
+            ),
+        }),
+    )
 
 admin.site.register(Player, PlayerAdmin)
 admin.site.register(Room, RoomAdmin)
-admin.site.register(Postih)
-admin.site.register(Vylepseni)
+admin.site.register(Effect, EffectAdmin)
 admin.site.register(Notification, NotificationAdmin)
 admin.site.register(History, HistoryAdmin)
 

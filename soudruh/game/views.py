@@ -201,10 +201,10 @@ def cube(request):
             player.pindex += dice_roll
             player.save()
             
-            CheckForSpecialPlaces(player.pindex, player, room)
-            
             AddHistoryRecord(username.capitalize() + ' hodil ' + str(dice_roll) + '.', 'dice', room)
             NewNotification('Hodil jsi ' + str(dice_roll) + '.', 'dice', player, room)
+            
+            CheckForSpecialPlaces(player.pindex, player, room)
             
             ChangeTurn(player)
             

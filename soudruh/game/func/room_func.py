@@ -57,8 +57,6 @@ def CheckPlayerOnMoveForErrors(room): # porovná, kdo je opravdu na tahu a kdo m
     player_on_move = room_players.filter(on_move=True) # kolik je hráčů v místnosti na tahu
     actual_player = room.actual_player # kdo je podle místnosti aktuálně na tahu
     
-    print(player_on_move)
-    
     if player_on_move.count() > 1: # pokud je na tahu víc než jeden hráč najednou
         for player in room_players: # každému hráči je řečeno, že není na tahu
             player.on_move = False
