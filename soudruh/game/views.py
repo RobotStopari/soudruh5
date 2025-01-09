@@ -213,12 +213,10 @@ def cube(request):
             
             new_player = Player.objects.filter(room=room).filter(on_move=True).first()
             
-            AddHistoryRecord('Na tahu je ' + new_player.account.username.capitalize() + '.', 'move', room)
-            send_mail('Jsi na tahu',
-            MOVE_EMAIL,
-            settings.EMAIL_HOST_USER,
-            [new_player.account.email],
-            fail_silently=False)
+            if new_player != player:
+                AddHistoryRecord('Na tahu je ' + new_player.account.username.capitalize() + '.', 'move', room)
+            
+            #send_mail('Jsi na tahu', MOVE_EMAIL, settings.EMAIL_HOST_USER, [new_player.account.email], fail_silently=False)
                     
     return JsonResponse({})
     
