@@ -201,7 +201,14 @@ def cube(request):
         if form.is_valid():
             
             dice_roll = RollDice(cube_size)
-            player.pindex += dice_roll
+            
+            if player.pindex not in [1000, 1001]:
+                player.pindex += dice_roll
+            elif dice_roll >= 6:
+                player.pindex = 0
+            else:
+                pass
+            
             player.save()
             
             AddHistoryRecord(username.capitalize() + ' hodil ' + str(dice_roll) + '.', 'dice', room)
@@ -227,8 +234,8 @@ def ajax_data(request):
     player = request.user.player  
     
     players = Player.objects.filter(room=room).order_by('joined_room_at')
-    history_records = History.objects.filter(room=room)
-    
+    history_records = History.objects.filter(room=room).order_by('-created_at')[:50]
+
     notifications = Notification.objects.filter(
     room=room,
     reciever=player,

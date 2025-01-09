@@ -10,7 +10,7 @@ admin.site.site_title = 'Soudruh Admin'
 class PlayerAdmin(admin.ModelAdmin):
     list_display = ('account', 'id', 'room', 'category', 'pindex', 'money')
     
-    readonly_fields = ('account', 'id', 'joined_room_at', 'last_notification_read', 'active', 'on_move')
+    readonly_fields = ('account', 'id', 'joined_room_at', 'last_notification_read', 'active')
     
     fieldsets = (
         (None, {
