@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.core.mail import send_mail
+from django.conf import settings
 
 from .forms import CreateUserForm, RoomForm, SelectRoomForm, LeaveRoomForm, CubeForm
 from .decorators import *
@@ -211,6 +213,18 @@ def cube(request):
             new_player = Player.objects.filter(room=room).filter(on_move=True).first()
             
             AddHistoryRecord('Na tahu je ' + new_player.account.username.capitalize() + '.', 'move', room)
+            send_mail('Jsi na tahu',
+            '''Milý soudruhu,
+            
+Jsi na tahu v naší úžasné partii Soudruhu, nezlob se. 
+            
+Na provedení svého tahu máš 24 hodin, jinak budeš nemilosrdně přeskočen.
+            
+S pozdravem,
+Ivan Mládek and Tchýně''',
+            settings.EMAIL_HOST_USER,
+            [new_player.account.email],
+            fail_silently=False)
                     
     return JsonResponse({})
     

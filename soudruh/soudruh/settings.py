@@ -151,3 +151,10 @@ JAZZMIN_SETTINGS = {
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"] 
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'soudruhu.nezlob.se@gmail.com'
+EMAIL_HOST_PASSWORD = 'indqwgjvpteqghwh'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
