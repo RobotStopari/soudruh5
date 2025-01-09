@@ -150,7 +150,7 @@ JAZZMIN_SETTINGS = {
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"] 
+ALLOWED_HOSTS = ['192.168.137.1', 'localhost', '127.0.0.1', '192.168.254.155']
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'soudruhu.nezlob.se@gmail.com'
