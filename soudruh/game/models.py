@@ -5,23 +5,10 @@ from colorfield.fields import ColorField
 
 from djsingleton.models import SingletonModel, SingletonActiveModel
 
+from .vars import *
+
 class Config(SingletonModel):
     cube_size = models.IntegerField(default=6)
-
-CATEGORIES = {
-        ('1-BEZ', 'Bezpartijní'),
-        ('2-KAN', 'Kandidát'),
-        ('3-KOM', 'Člen Strany'),
-        ('4-POS', 'Poslanec'),
-        ('5-UV', 'Člen Ústředního Výboru'),
-        ('6-POL', 'Člen Politbyra ÚV'),
-        ('7-GEN', 'Generální Tajemník ÚV Strany'),
-        }
-
-EFFECTS = {
-        ('happy', 'Vylepšení'),
-        ('sad', 'Postih'),
-        }
 
 class Room(models.Model):
     room_name = models.CharField(max_length=200, null=True)

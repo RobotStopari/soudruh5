@@ -11,6 +11,7 @@ from .models import *
 from .serializers import *
 from .func.game_func import *
 from .func.room_func import *
+from .vars import *
 
 from datetime import datetime
 
@@ -214,14 +215,7 @@ def cube(request):
             
             AddHistoryRecord('Na tahu je ' + new_player.account.username.capitalize() + '.', 'move', room)
             send_mail('Jsi na tahu',
-            '''Milý soudruhu,
-            
-Jsi na tahu v naší úžasné partii Soudruhu, nezlob se. 
-            
-Na provedení svého tahu máš 24 hodin, jinak budeš nemilosrdně přeskočen.
-            
-S pozdravem,
-Ivan Mládek and Tchýně''',
+            MOVE_EMAIL,
             settings.EMAIL_HOST_USER,
             [new_player.account.email],
             fail_silently=False)
