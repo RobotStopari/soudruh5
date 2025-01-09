@@ -190,26 +190,24 @@ def cube(request):
     username = player.account.username.capitalize()
     room = player.room
     
-    max_roll = 2
-        
     if request.method == 'POST':
         form = CubeForm(request.POST, instance=request.user.player)
         
         if form.is_valid():
             
-            dice_roll = RollDice(max_roll)
+            dice_roll = RollDice(MAX_DICE, player, room)
             
-            if player.pindex not in [1000, 1001]:
-                player.pindex += dice_roll
-            elif dice_roll >= max_roll:
-                player.pindex = 0
-            else:
-                pass
+            if dice_roll != MAX_DICE * 4:
+                if player.pindex not in [1000, 1001]:
+                    player.pindex += dice_roll
+                elif dice_roll >= MAX_DICE:
+                    player.pindex = 0
+                    NewNotification(f"Hodil jsi {str(MAX_DICE)} a jsi propuštěn.", 'happy', player, room)
+                    AddHistoryRecord(f"Soudruh {player.account.username.capitalize()} hodil {str(MAX_DICE)} a byl propuštěn.", 'happy', room)
+                else:
+                    pass
             
             player.save()
-            
-            AddHistoryRecord(username.capitalize() + ' hodil ' + str(dice_roll) + '.', 'dice', room)
-            NewNotification('Hodil jsi ' + str(dice_roll) + '.', 'dice', player, room)
             
             CheckForSpecialPlaces(player.pindex, player, room)
             

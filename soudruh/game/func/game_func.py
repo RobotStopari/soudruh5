@@ -6,12 +6,27 @@ from ..vars import *
 
 wants_to_senf_effect_message = None
     
-def RollDice(max): # hoď kostkou
-    return randint(1, max)
-
-def Notify(type, message, player, room): # ulož do databáze zprávu
-    new_notification = Notification(type=type, message=message, reciever=player, room=room)
-    new_notification.save()
+def RollDice(max, player, room): # hoď kostkou
+    throw = randint(1, max)
+    
+    if throw == max:
+        throw += randint(1, max)
+        
+        if throw == max * 2:
+            throw += randint(1, max)
+            
+            if throw == max * 3:
+                throw += randint(1, max)
+                
+    AddHistoryRecord(f"{player.account.username.capitalize()} hodil {throw}.", 'dice', room)
+    NewNotification(f"Hodil jsi {throw}.", 'dice', player, room)
+    
+    if throw == max * 4:
+        NewNotification(f"Hodil jsi čtyřikrát po sobě {str(max)}. Házíš kostkou vyrobenou na Západě. Jdi do vězení.", 'sad', player, room)
+        AddHistoryRecord(f"Soudruh {player.account.username.capitalize()} házel kostkou vyrobenou na Západě a šel do vězení.", 'sad', room)
+        SpecialMove(player, 1000, True)
+                    
+    return throw
 
 def AddHistoryRecord(message, type, room): # ulož do databáze history record
     new_record = History(message=message, type=type, room=room)
@@ -101,26 +116,7 @@ def CheckForSpecialPlaces(pindex, player, room):
     player_on_same_pindex = Player.objects.filter(room=room).exclude(id=player.id).filter(pindex=player.pindex)
     
     if player_on_same_pindex.exists() and player.pindex not in [0, 1000, 1001]:
-        the_other_player = player_on_same_pindex.first()
-        o_money = the_other_player.money
-        money_change = 0
-        
-        if o_money > 100000:
-            o_money -= 100000
-            player.money += 100000
-            money_change = 100000
-        else:
-            player.money += o_money
-            money_change = o_money
-            o_money = 0
-        
-        player.save()
-        the_other_player.save()  
-        SpecialMove(the_other_player, 0, False)
-        
-        NewNotification('Vyhodil jsi soudruha ' + the_other_player.account.username.capitalize() + ' a získal jsi od něj ' + str(money_change) + 'KČS.', 'happy', player, room)
-        NewNotification('Byl jsi vyhozen soudruhem ' + player.account.username.capitalize() + ' a odevzdal jsi mu ' + str(money_change) + 'KČS.', 'sad', the_other_player, room)
-        AddHistoryRecord('Soudruh ' + player.account.username.capitalize() + ' vyhodil soudruha ' + the_other_player.account.username.capitalize() + ' a získal jsi od něj ' + str(money_change) + 'KČS.', 'sad', room)
+        KickOutPlayer(player_on_same_pindex, player, room)
 
 def SpecialMove(player, index, remove_all):
     player.pindex = index
@@ -142,3 +138,25 @@ def SendEffectMessage(player, room):
     print(wants_to_senf_effect_message)
     NewNotification(wants_to_senf_effect_message.notification_message, wants_to_senf_effect_message.type, player, room)
     wants_to_senf_effect_message = None
+    
+def KickOutPlayer(player_on_same_pindex, player, room):
+    the_other_player = player_on_same_pindex.first()
+    o_money = the_other_player.money
+    money_change = 0
+    
+    if o_money > KICK_OUT_MONEY:
+        o_money -= KICK_OUT_MONEY
+        player.money += KICK_OUT_MONEY
+        money_change = KICK_OUT_MONEY
+    else:
+        player.money += o_money
+        money_change = o_money
+        o_money = 0
+    
+    player.save()
+    the_other_player.save()  
+    SpecialMove(the_other_player, 0, False)
+    
+    NewNotification('Vyhodil jsi soudruha ' + the_other_player.account.username.capitalize() + ' a získal jsi od něj ' + str(money_change) + 'KČS.', 'happy', player, room)
+    NewNotification('Byl jsi vyhozen soudruhem ' + player.account.username.capitalize() + ' a odevzdal jsi mu ' + str(money_change) + 'KČS.', 'sad', the_other_player, room)
+    AddHistoryRecord('Soudruh ' + player.account.username.capitalize() + ' vyhodil soudruha ' + the_other_player.account.username.capitalize() + ' a získal jsi od něj ' + str(money_change) + 'KČS.', 'sad', room)

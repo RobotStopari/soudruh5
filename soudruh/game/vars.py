@@ -28,3 +28,6 @@ EFFECTS = {
         ('happy', 'Vylepšení'),
         ('sad', 'Postih'),
         }
+
+MAX_DICE = 6
+KICK_OUT_MONEY = 100000
