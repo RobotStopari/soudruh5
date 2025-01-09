@@ -8,7 +8,7 @@ from djsingleton.models import SingletonModel, SingletonActiveModel
 from .vars import *
 
 class Config(SingletonModel):
-    cube_size = models.IntegerField(default=6)
+    char = models.CharField(max_length=200, null=True)
 
 class Room(models.Model):
     room_name = models.CharField(max_length=200, null=True)

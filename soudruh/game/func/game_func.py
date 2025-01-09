@@ -38,7 +38,7 @@ def RunEffect(player, room, type):
     elif se.go_to_blazinec:
         SpecialMove(player, 1001, True)
     elif se.go_to_start:
-        player.pindex = 0
+        SpecialMove(player, 0, False)
     else:
     
         if se.pindex_change_by:
@@ -91,13 +91,36 @@ def CheckForSpecialPlaces(pindex, player, room):
         SpecialMove(player, 0, False)
         
     if player.money < 0:
-        NewNotification('Z důvodu nedostatečných finančních prostředků jsi byl vrácen na start', 'sad', player, room)
+        NewNotification('Z důvodu nedostatečných finančních prostředků jsi byl vrácen na start.', 'sad', player, room)
         AddHistoryRecord('Soudruh ' + player.account.username.capitalize() + ' byl z důvodu nedostatečných finančních prostředků vrácen na start.', 'sad', room)
         SpecialMove(player, 0, False)
         
     if wants_to_senf_effect_message:
         SendEffectMessage(player, room)
         
+    player_on_same_pindex = Player.objects.filter(room=room).exclude(id=player.id).filter(pindex=player.pindex)
+    
+    if player_on_same_pindex.exists() and player.pindex not in [0, 1000, 1001]:
+        the_other_player = player_on_same_pindex.first()
+        o_money = the_other_player.money
+        money_change = 0
+        
+        if o_money > 100000:
+            o_money -= 100000
+            player.money += 100000
+            money_change = 100000
+        else:
+            player.money += o_money
+            money_change = o_money
+            o_money = 0
+        
+        player.save()
+        the_other_player.save()  
+        SpecialMove(the_other_player, 0, False)
+        
+        NewNotification('Vyhodil jsi soudruha ' + the_other_player.account.username.capitalize() + ' a získal jsi od něj ' + str(money_change) + 'KČS.', 'happy', player, room)
+        NewNotification('Byl jsi vyhozen soudruhem ' + player.account.username.capitalize() + ' a odevzdal jsi mu ' + str(money_change) + 'KČS.', 'sad', the_other_player, room)
+        AddHistoryRecord('Soudruh ' + player.account.username.capitalize() + ' vyhodil soudruha ' + the_other_player.account.username.capitalize() + ' a získal jsi od něj ' + str(money_change) + 'KČS.', 'sad', room)
 
 def SpecialMove(player, index, remove_all):
     player.pindex = index

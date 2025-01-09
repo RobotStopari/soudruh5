@@ -16,9 +16,6 @@ from .vars import *
 from datetime import datetime
 
 
-config = Config.objects.get(id=1)
-
-
 #   USER HANDLING - index, register, login, logout
 
 @user_not_auth
@@ -193,18 +190,18 @@ def cube(request):
     username = player.account.username.capitalize()
     room = player.room
     
-    cube_size = config.cube_size
+    max_roll = 2
         
     if request.method == 'POST':
         form = CubeForm(request.POST, instance=request.user.player)
         
         if form.is_valid():
             
-            dice_roll = RollDice(cube_size)
+            dice_roll = RollDice(max_roll)
             
             if player.pindex not in [1000, 1001]:
                 player.pindex += dice_roll
-            elif dice_roll >= 6:
+            elif dice_roll >= max_roll:
                 player.pindex = 0
             else:
                 pass
@@ -230,11 +227,14 @@ def cube(request):
     
 @auth_user
 def ajax_data(request): 
-    room = request.user.player.room
-    player = request.user.player  
+    player = request.user.player 
+    room = player.room 
     
     players = Player.objects.filter(room=room).order_by('joined_room_at')
     history_records = History.objects.filter(room=room).order_by('-created_at')[:50]
+    
+    history_records = list(history_records)
+    history_records.reverse()
 
     notifications = Notification.objects.filter(
     room=room,
@@ -245,9 +245,9 @@ def ajax_data(request):
     history_records_json = HistoryRecordSerializer(history_records, many=True).data
     notifications_json = NotificationSerializer(notifications, many=True).data
     
-    if notifications:
+    if notifications.exists():
         player.last_notification_read = notifications.last().id
-        player.save()
+        player.save(update_fields=['last_notification_read'])
         
     return JsonResponse({
         'players': players_json,
