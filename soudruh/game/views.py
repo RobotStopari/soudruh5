@@ -148,8 +148,13 @@ def join_room(request):
     
     return render(request, 'game/join_room.html', context)
 
+#   STATIC PAGES - rules, credits
 
+def rules(request):
+    return render(request, 'game/rules.html')
 
+def credits(request):
+    return render(request, 'game/credits.html')
 
 #   GAME - room, cube, ajax    
 
