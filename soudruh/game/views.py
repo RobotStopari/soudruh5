@@ -98,6 +98,7 @@ def createRoom(request):
             player.is_room_admin = True
             player.on_move = True
             player.joined_room_at = datetime.now()
+            player.money = GAME_START_MONEY
             player.save()
             
             
@@ -130,6 +131,7 @@ def join_room(request):
             ResetPlayer(player)
             player.room = room
             player.joined_room_at = datetime.now()
+            player.money = GAME_START_MONEY
             player.save()
             
             CheckPlayerOnMoveForErrors(room)
