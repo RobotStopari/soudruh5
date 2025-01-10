@@ -14,7 +14,8 @@ urlpatterns = [
     path('send-chat-message/', views.send_chat_message, name='send_chat_message'),
     path('ajax/data/', views.ajax_data, name='ajax_data'),
     path('rules/', views.rules, name='rules'),
-    path('credits/', views.credits, name='credits')
+    path('credits/', views.credits, name='credits'),
+    path('history-records', views.history_records, name='history_records')
 
 ]
 

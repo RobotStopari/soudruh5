@@ -156,7 +156,16 @@ def rules(request):
 def credits(request):
     return render(request, 'game/credits.html')
 
-#   GAME - room, cube, ajax    
+#   GAME - room, cube, ajax   
+
+@auth_user
+def history_records(request):
+    player = request.user.player
+    room = player.room
+    
+    hr = History.objects.filter(room=room).order_by('-created_at')
+
+    return render(request, 'game/history-records.html', {'hr': hr})
 
 @auth_user_in_room
 def room(request, pk):
