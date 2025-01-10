@@ -46,7 +46,10 @@ def RunEffect(player, room, type):
     global wants_to_senf_effect_message
     wants_to_senf_effect_message = se
     
-    AddHistoryRecord(se.history_record_message_p1 + ' ' + player.account.username.capitalize() + ' ' + se.history_record_message_p2, type, room)
+    if se.history_record_message_p1_if_stalin and se.history_record_message_p2_if_stalin:
+        AddHistoryRecord(se.history_record_message_p1_if_stalin + ' ' + player.account.username.capitalize() + ' ' + se.history_record_message_p2_if_stalin, type, room)
+    else:
+        AddHistoryRecord(se.history_record_message_p1 + ' ' + player.account.username.capitalize() + ' ' + se.history_record_message_p2, type, room)
     
     if se.go_to_vezeni:
         SpecialMove(player, 1000, True)
@@ -60,7 +63,7 @@ def RunEffect(player, room, type):
             player.pindex += se.pindex_change_by
         if se.pindex_set_to:
             player.pindex = se.pindex_change_by
-        if se.money_change_by:
+        if se.money_change_by and not se.money_change_by_if_stalin:
             player.money += se.money_change_by
         if se.wait_moves_set_to:
             player.wait_moves = se.wait_moves_set_to
@@ -90,6 +93,12 @@ def RunEffect(player, room, type):
                     pl.save()
         if se.money_change_by_per_player:
             player.money += se.money_change_by_per_player * players.count()
+            
+        if se.money_change_by_if_stalin:
+            if player.looks_like_stalin:
+                player.money += se.money_change_by_if_stalin
+            else:
+                player.money += se.money_change_by                
     
     player.save()
     return se
@@ -135,8 +144,10 @@ def SpecialMove(player, index, remove_all):
     
 def SendEffectMessage(player, room):
     global wants_to_senf_effect_message
-    print(wants_to_senf_effect_message)
-    NewNotification(wants_to_senf_effect_message.notification_message, wants_to_senf_effect_message.type, player, room)
+    if wants_to_senf_effect_message.notification_message_if_stalin:
+        NewNotification(wants_to_senf_effect_message.notification_message_if_stalin, wants_to_senf_effect_message.type, player, room)
+    else:
+        NewNotification(wants_to_senf_effect_message.notification_message, wants_to_senf_effect_message.type, player, room)
     wants_to_senf_effect_message = None
     
 def KickOutPlayer(player_on_same_pindex, player, room):

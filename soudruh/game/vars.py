@@ -24,6 +24,8 @@ CATEGORIES = {
         ('7-GEN', 'Generální Tajemník ÚV Strany'),
         }
 
+CATEGORIES = sorted(CATEGORIES, key=lambda x: x[1])
+
 EFFECTS = {
         ('happy', 'Vylepšení'),
         ('sad', 'Postih'),

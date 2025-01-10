@@ -81,7 +81,12 @@ class EffectAdmin(admin.ModelAdmin):
                 'notification_message', 'history_record_message_p1', 'history_record_message_p2',
             ),
         }),
-        ('Changes', {
+        ('Go To', {
+            "fields": (
+                'go_to_vezeni', 'go_to_blazinec', 'go_to_start',
+            ),
+        }),
+        ('Basics', {
             "fields": (
                 'pindex_change_by', 'pindex_set_to', 'money_change_by', 'wait_moves_set_to',
             ),
@@ -96,10 +101,11 @@ class EffectAdmin(admin.ModelAdmin):
                 'give_everybody', 'remove_from_everybody', 'money_change_by_per_player',
             ),
         }),
-        ('Go To', {
+        ('If stalin', {
             "fields": (
-                'go_to_vezeni', 'go_to_blazinec', 'go_to_start',
+                'money_change_by_if_stalin', 'notification_message_if_stalin', 'history_record_message_p1_if_stalin', 'history_record_message_p2_if_stalin',
             ),
+            'description': 'Pokud jsou tato pole vyplněná a pokud hráč vypadá jako Stalin, přepíší money_change_by, notifikace a history_record zprávy ty výše uvedené. Pokud jako Stalin nevypadá, využíjí se ty původní. Je tedy potřeba vyplnit oboje.'
         }),
     )
 
