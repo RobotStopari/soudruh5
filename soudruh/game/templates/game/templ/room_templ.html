@@ -68,12 +68,14 @@
                         href="{% url 'credits' %}" target="_blank">
                         Credits 🡥
                     </a></li>
-                <li><a class="dropdown-item" type="button" style="position: relative; align-self: start;">
+                <li><a class="dropdown-item" type="button" style="position: relative; align-self: start;"
+                        href="https://vladopiecky.blogspot.com/2023/04/soudruhu-nezlob-se.html" target="_blank">
                         Napsali o nás 🡥
                     </a></li>
-                <li><a class="dropdown-item text-success" type="button" style="position: relative; align-self: start;">
-                        Přispět na provoz 🡥
-                    </a></li>
+                <li><button type="button" class="dropdown-item text-success" data-bs-toggle="modal"
+                        data-bs-target="#qrModal">
+                        Příspěvek na provoz
+                    </button></li>
                 <li>
                     <hr class="dropdown-divider">
                 </li>
@@ -214,6 +216,21 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Příspěvek na provoz</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="{% static 'images/qr.jpg' %}" alt="QR platba" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
