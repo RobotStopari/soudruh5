@@ -100,3 +100,14 @@ function createHistoryRecord(h, history_records_div) {
             break;
     }
 }
+
+function createChatMessage(m, history_records_div) {
+    history_records_div.innerHTML +=
+        `
+        <strong>${formatDateTime(m.created_at)} - ${capitalize(m.name)}:</strong><br>${m.message}<br><br>
+        `;
+}
+
+function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}

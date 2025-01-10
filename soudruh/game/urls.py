@@ -11,6 +11,7 @@ urlpatterns = [
     path('room/<str:pk>/', views.room, name='room'),
     path('join-room/', views.join_room, name='join_room'),
     path('cube/', views.cube, name='cube'),
+    path('send-chat-message/', views.send_chat_message, name='send_chat_message'),
     path('ajax/data/', views.ajax_data, name='ajax_data')
 ]
 

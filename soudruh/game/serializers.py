@@ -22,3 +22,11 @@ class NotificationSerializer(serializers.ModelSerializer):
         fields = ['id', 'message', 'type', 'reciever', 'room', 'created_at']
         
 
+class ChatMessageSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source='author.account.username')
+    
+    class Meta:
+        model = ChatMessage
+        fields = ['id', 'message', 'name', 'room', 'created_at']
+        
+

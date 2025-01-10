@@ -2,7 +2,6 @@ from django.contrib import admin
 from .models import *
 
 from django.contrib.auth.models import Group
-from djsingleton.admin import SingletonAdmin, SingletonActiveAdmin
 
 admin.site.site_header = 'Admine, nezlob se!'
 admin.site.site_title = 'Soudruh Admin'
@@ -64,6 +63,10 @@ class HistoryAdmin(admin.ModelAdmin):
     list_display = ('message', 'room',)
     readonly_fields = ('id', 'created_at',)
     
+class ChatMessageAdmin(admin.ModelAdmin):
+    list_display = ('message', 'author', 'room',)
+    readonly_fields = ('id', 'created_at',)
+    
 class EffectAdmin(admin.ModelAdmin):
     list_display = ('type', 'category', 'notification_message')
     
@@ -105,7 +108,6 @@ admin.site.register(Room, RoomAdmin)
 admin.site.register(Effect, EffectAdmin)
 admin.site.register(Notification, NotificationAdmin)
 admin.site.register(History, HistoryAdmin)
-
-admin.site.register(Config, SingletonAdmin)
+admin.site.register(ChatMessage, ChatMessageAdmin)
 
 admin.site.unregister(Group)

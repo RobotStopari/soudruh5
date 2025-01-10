@@ -3,12 +3,7 @@ from django.contrib.auth.models import User
 
 from colorfield.fields import ColorField
 
-from djsingleton.models import SingletonModel, SingletonActiveModel
-
 from .vars import *
-
-class Config(SingletonModel):
-    char = models.CharField(max_length=200, null=True)
 
 class Room(models.Model):
     room_name = models.CharField(max_length=200, null=True)
@@ -127,3 +122,16 @@ class Effect(models.Model):
     class Meta:
         verbose_name = 'Efekt'
         verbose_name_plural = 'Efekty'
+
+class ChatMessage(models.Model):
+    message = models.CharField(max_length=2000, null=True)
+    author = models.ForeignKey(Player, on_delete=models.CASCADE, null=True)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    
+    def __str__(self):
+        return self.message
+    
+    class Meta:
+        verbose_name = 'Zpráva v chatu'
+        verbose_name_plural = 'Zprávy v chatu'

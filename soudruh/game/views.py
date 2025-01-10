@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.mail import send_mail
 from django.conf import settings
 
-from .forms import CreateUserForm, RoomForm, SelectRoomForm, LeaveRoomForm, CubeForm
+from .forms import *
 from .decorators import *
 from .models import *
 from .serializers import *
@@ -14,6 +14,8 @@ from .func.room_func import *
 from .vars import *
 
 from datetime import datetime
+import json
+
 
 
 #   USER HANDLING - index, register, login, logout
@@ -185,13 +187,12 @@ def room(request, pk):
     
 @user_on_move
 def cube(request):
-    form = CubeForm
     player = request.user.player
     username = player.account.username.capitalize()
     room = player.room
     
     if request.method == 'POST':
-        form = CubeForm(request.POST, instance=request.user.player)
+        form = CubeForm(request.POST, instance=player)
         
         if form.is_valid():
             
@@ -203,7 +204,7 @@ def cube(request):
                 elif dice_roll >= MAX_DICE:
                     player.pindex = 0
                     NewNotification(f"Hodil jsi {str(MAX_DICE)} a jsi propuštěn.", 'happy', player, room)
-                    AddHistoryRecord(f"Soudruh {player.account.username.capitalize()} hodil {str(MAX_DICE)} a byl propuštěn.", 'happy', room)
+                    AddHistoryRecord(f"Soudruh {username} hodil {str(MAX_DICE)} a byl propuštěn.", 'happy', room)
                 else:
                     pass
             
@@ -221,6 +222,29 @@ def cube(request):
             #send_mail('Jsi na tahu', MOVE_EMAIL, settings.EMAIL_HOST_USER, [new_player.account.email], fail_silently=False)
                     
     return JsonResponse({})
+
+@auth_user
+def send_chat_message(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        message_content = data.get('message')
+        
+        player = request.user.player
+        room = player.room
+
+        if message_content:
+            chat_message = ChatMessage.objects.create(
+                message=message_content,
+                author=player,
+                room=room
+            )
+            chat_message.save()
+
+            return JsonResponse({'status': 'success', 'message': 'Message sent successfully'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'Message content is required'}, status=400)
+    
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
     
     
 @auth_user
@@ -230,9 +254,13 @@ def ajax_data(request):
     
     players = Player.objects.filter(room=room).order_by('joined_room_at')
     history_records = History.objects.filter(room=room).order_by('-created_at')[:50]
+    chat_messages = ChatMessage.objects.filter(room=room).order_by('-created_at')[:50]
     
     history_records = list(history_records)
     history_records.reverse()
+    
+    chat_messages = list(chat_messages)
+    chat_messages.reverse()
 
     notifications = Notification.objects.filter(
     room=room,
@@ -242,6 +270,7 @@ def ajax_data(request):
     players_json = PlayerSerializer(players, many=True).data
     history_records_json = HistoryRecordSerializer(history_records, many=True).data
     notifications_json = NotificationSerializer(notifications, many=True).data
+    chat_messages_json = ChatMessageSerializer(chat_messages, many=True).data
     
     if notifications.exists():
         player.last_notification_read = notifications.last().id
@@ -252,4 +281,5 @@ def ajax_data(request):
         'history_records': history_records_json,
         'player_id': player.id,
         'notifications': notifications_json,
+        'chat_messages': chat_messages_json,
     })

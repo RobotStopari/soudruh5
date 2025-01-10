@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import Room, Player
+from .models import *
 
 
 
@@ -32,3 +32,8 @@ class CubeForm(ModelForm):
     class Meta:
         model = Player
         fields = []
+        
+class ChatMessageForm(ModelForm):
+    class Meta:
+        model = ChatMessage
+        fields = ['message', 'author', 'room']
