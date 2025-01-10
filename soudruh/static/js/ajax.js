@@ -9,10 +9,14 @@ async function rollDice() {
         body: JSON.stringify({})
     });
 
+    const cube = document.getElementById('hod_kostkou');
+
     if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
     } else {
-        reloadRoom()
+        reloadRoom().then(() => {
+            cube.style.display = "none"; // Hide the cube after reloadRoom finishes
+        });
     }
 }
 
@@ -95,9 +99,9 @@ async function reloadRoom() {
     }
 
     if (player.on_move) {
-        cube.style.display = ""
+        cube.style.display = "";
     } else {
-        cube.style.display = "none"
+        cube.style.display = "none";
     }
 
     for (let i = history_records.length - 1; i >= 0; i--) {
