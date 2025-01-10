@@ -231,6 +231,10 @@ def send_chat_message(request):
         
         player = request.user.player
         room = player.room
+        
+        username = player.account.username.capitalize()
+        
+        others = Player.objects.filter(room=room).exclude(id=player.id)
 
         if message_content:
             chat_message = ChatMessage.objects.create(
@@ -239,6 +243,10 @@ def send_chat_message(request):
                 room=room
             )
             chat_message.save()
+            
+            AddHistoryRecord(f"Soudruh {username} napsal: {message_content}.", 'message', room)
+            for pl in others:
+                NewNotification(f"Soudruh {username} píše: {message_content}.", 'message', pl, room)
 
             return JsonResponse({'status': 'success', 'message': 'Message sent successfully'})
         else:

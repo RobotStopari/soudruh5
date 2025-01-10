@@ -52,8 +52,6 @@ async function sendChatMessage() {
         if (!response.ok) {
             const errorText = await response.text(); // Get detailed error response
             throw new Error(`HTTP error! Status: ${response.status}, Response: ${errorText}`);
-        } else {
-            reloadRoom();
         }
     } catch (error) {
         console.error("Error sending message:", error);
@@ -62,6 +60,7 @@ async function sendChatMessage() {
 
     // Clear the input field
     messageInput.value = '';
+    reloadRoom()
 }
 
 

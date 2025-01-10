@@ -17,6 +17,13 @@
     }
 }
 
+.dropdown-menu .no-hover:hover,
+.dropdown-menu .no-hover:active {
+    background-color: transparent !important;
+    color: inherit !important;
+    text-decoration: none !important;
+}
+
 #diceRoll {
     animation: pulseAndColor 1.5s infinite;
     /* Adjust duration as needed */

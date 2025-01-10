@@ -39,10 +39,105 @@
 </script>
 
 <div class="d-flex justify-content-center" id="menu-container">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mainModal"
-        style="margin-top: 31px;">
-        MENU
-    </button>
+    <div class="dropdown">
+        <button type="button" class="btn btn-primary dropdown-toggle" style="margin-top: 31px;" id="dropdownMenuButton"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            MENU
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><span class="dropdown-item no-hover text-dark fw-bold">Místnost: {{ room|capfirst }}</span></li>
+            <li>
+                <p class="dropdown-item no-hover mb-0">Soudruh: {{ player|capfirst }}</p>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            <li><button type="button" class="dropdown-item text-primary" data-bs-toggle="modal"
+                    data-bs-target="#exampleModal" style="position: relative; align-self: start;">
+                    Herní deník
+                </button></li>
+            <li><button type="button" class="dropdown-item text-primary" data-bs-toggle="modal"
+                    data-bs-target="#chatModal" style="position: relative; align-self: start;">
+                    Chat
+                </button></li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            <!-- The link that triggers the confirmation modal -->
+            <li><a class="dropdown-item text-danger" href="javascript:void(0);" role="button"
+                    onclick="showConfirmation(event, 'Opravdu se chceš odhlásit?', 'logout')">Odhlásit se</a></li>
+            <li>
+                <form action="" method="POST"
+                    onsubmit="return showConfirmation(event, 'Opravdu si přeješ opustit místnost? Věz, že veškeré tvé oběživo bude ztraceno a na start vrácen budeš.', 'leaveRoom')">
+                    {% csrf_token %}
+                    <input type="submit" value="Opustit místnost" class="dropdown-item text-danger">
+                </form>
+            </li>
+        </ul>
+
+        <!-- Confirmation Modal -->
+        <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmationModalLabel">Potvrzení akce</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="confirmationMessage">
+                        <!-- The message will go here -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zrušit</button>
+                        <button type="button" class="btn btn-danger" id="confirmButton">Potvrdit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // This will hold the event and action context for confirmation
+            let confirmationAction = null;
+            let confirmationEvent = null;
+
+            // Function to show the confirmation modal with custom message
+            function showConfirmation(event, message, action) {
+                // Prevent the default behavior (form submission or link click)
+                event.preventDefault();
+
+                // Set the message for the modal
+                document.getElementById('confirmationMessage').innerText = message;
+
+                // Store the event and action to be executed later
+                confirmationEvent = event;
+                confirmationAction = action;
+
+                // Close the dropdown menu if it's open
+                let dropdownMenu = document.querySelector('.dropdown-menu.show');
+                if (dropdownMenu) {
+                    dropdownMenu.classList.remove('show');
+                }
+
+                // Show the confirmation modal
+                $('#confirmationModal').modal('show');
+            }
+
+            // Function to execute the action after confirmation
+            document.getElementById('confirmButton').onclick = function () {
+                if (confirmationAction === 'logout') {
+                    // Redirect to logout URL if confirmed
+                    window.location.href = "{% url 'logout' %}";
+                } else if (confirmationAction === 'leaveRoom') {
+                    // Submit the form if confirmed
+                    confirmationEvent.target.submit();
+                }
+
+                // Close the modal
+                $('#confirmationModal').modal('hide');
+            };
+        </script>
+
+    </div>
 </div>
 
 <div id="hod_kostkou" style="display:none;">
@@ -124,7 +219,6 @@
                     <input id="napsatZpravu" class="btn btn-success" type="button" value="Napsat zprávu"
                         onclick="sendChatMessage()" />
                 </div>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Zavřít</button>
             </div>
         </div>
     </div>
