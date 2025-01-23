@@ -1,13 +1,27 @@
 {% extends "game/templ/main.html" %} {% block content %}
 <div class="card p-4 pb-2 bg-light">
+	<h1>Vítej, soudruhu: {{request.user|capfirst}}!</h1>
 
-    <h1>Vítej, soudruhu: {{request.user|capfirst}}!</h1>
-
-    <div class="btn-group-vertical btn-group-lg text-light mt-3 mb-3" role="group" aria-label="Basic example">
-        <a class="btn btn-outline-success p-3" href="{% url 'create_room' %}" role="button">Založit místnost</a>
-        <a class="btn btn-outline-success p-3" href="{% url 'join_room' %}" role="button">Připojit se do místnosti</a>
-    </div>
-    <a class="btn btn-danger mb-3" href="{% url 'logout' %}" role="button">Odhlásit se</a>
-
+	<div
+		class="btn-group-vertical btn-group-lg text-light mt-3 mb-3"
+		role="group"
+		aria-label="Basic example"
+	>
+		<a
+			class="btn btn-outline-success p-3"
+			href="{% url 'create_room' %}"
+			role="button"
+			>Založit místnost</a
+		>
+		<a
+			class="btn btn-outline-success p-3"
+			href="{% url 'join_room' %}"
+			role="button"
+			>Připojit se do místnosti</a
+		>
+	</div>
+	<a class="btn btn-danger mb-3" href="{% url 'logout' %}" role="button"
+		>Odhlásit se</a
+	>
 </div>
 {% endblock content %}

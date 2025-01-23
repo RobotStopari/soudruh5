@@ -1,64 +1,64 @@
 @keyframes pulseAndColor {
-    0% {
-        transform: scale(1);
-        background-color: #28a745;
-        /* Original success green */
-    }
-    50% {
-        transform: scale(1.1);
-        /* Slightly larger */
-        background-color: #d09434;
-        /* Lighter green */
-    }
-    100% {
-        transform: scale(1);
-        background-color: #28a745;
-        /* Back to original green */
-    }
+	0% {
+		transform: scale(1);
+		background-color: #28a745;
+		/* Original success green */
+	}
+	50% {
+		transform: scale(1.1);
+		/* Slightly larger */
+		background-color: #d09434;
+		/* Lighter green */
+	}
+	100% {
+		transform: scale(1);
+		background-color: #28a745;
+		/* Back to original green */
+	}
 }
 
 .dropdown-menu .no-hover:hover,
 .dropdown-menu .no-hover:active {
-    background-color: transparent !important;
-    color: inherit !important;
-    text-decoration: none !important;
+	background-color: transparent !important;
+	color: inherit !important;
+	text-decoration: none !important;
 }
 
 #diceRoll {
-    animation: pulseAndColor 1.5s infinite;
-    /* Adjust duration as needed */
+	animation: pulseAndColor 1.5s infinite;
+	/* Adjust duration as needed */
 }
 
 #menu-container {
-    position: absolute;
-    top: 0;
-    margin: auto;
-    width: 100%;
+	position: absolute;
+	top: 0;
+	margin: auto;
+	width: 100%;
 }
 
 #hod_kostkou {
-    position: absolute;
-    top: 100px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
+	position: absolute;
+	top: 100px;
+	width: 100%;
+	display: flex;
+	justify-content: center;
 }
 
 @media only screen and (max-width: 940px) {
-    #menu-container {
-        position: relative;
-    }
-    #menu-container button {
-        margin-top: 0px !important;
-    }
-    #hod_kostkou {
-        position: relative;
-        top: 0;
-        margin: 0px;
-        display: flex;
-        justify-content: center;
-    }
-    #hod_kostkou input {
-        margin: 10px;
-    }
+	#menu-container {
+		position: relative;
+	}
+	#menu-container button {
+		margin-top: 0px !important;
+	}
+	#hod_kostkou {
+		position: relative;
+		top: 0;
+		margin: 0px;
+		display: flex;
+		justify-content: center;
+	}
+	#hod_kostkou input {
+		margin: 10px;
+	}
 }

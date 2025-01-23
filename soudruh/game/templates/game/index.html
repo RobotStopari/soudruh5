@@ -1,10 +1,17 @@
 {% extends "game/templ/main.html" %} {% block content %}
 
-
 <h1>Vítej, soudruhu!</h1>
-<div class="btn-group btn-group-lg text-light mt-3 mb-3" role="group" aria-label="Basic example">
-    <a class="btn btn-success" href="{% url 'login' %}" role="button">Již jsem soudruhem</a>
-    <a class="btn btn-danger" href="{% url 'register' %}" role="button">Vstoupit do strany</a>
+<div
+	class="btn-group btn-group-lg text-light mt-3 mb-3"
+	role="group"
+	aria-label="Basic example"
+>
+	<a class="btn btn-success" href="{% url 'login' %}" role="button"
+		>Již jsem soudruhem</a
+	>
+	<a class="btn btn-danger" href="{% url 'register' %}" role="button"
+		>Vstoupit do strany</a
+	>
 </div>
 
 {% endblock content %}

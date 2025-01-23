@@ -1,27 +1,37 @@
 {% extends "game/templ/room_templ.html" %} {% load static %} {% block content %}
 
-<script src="{% static '/js/vars.js' %}"></script>
-<script src="{% static '/js/messages.js' %}"></script>
-<script src="{% static '/js/figs.js' %}"></script>
-
-
 <div class="m-1 d-flex justify-content-center">
-    <canvas id="game"
-        style="max-height: 95vh; max-width: 100%; background-color: rgb(244, 244, 244); border: rgb(228, 228, 228) solid 1px; border-radius: 10px;"
-        class="m-3 p-md-3">
-        <img src="{% static '/images/board-min.webp' %}" alt="gameboard" id="gameboard">
-        <img src="{% static '/images/fig3.png' %}" alt="fig" id="fig">
-    </canvas>
+	<canvas
+		id="game"
+		style="
+			max-height: 95vh;
+			max-width: 100%;
+			background-color: rgb(244, 244, 244);
+			border: rgb(228, 228, 228) solid 1px;
+			border-radius: 10px;
+		"
+		class="m-3 p-md-3"
+	>
+		<img
+			src="{% static '/images/board-min.webp' %}"
+			alt="gameboard"
+			id="gameboard"
+		/>
+		<img src="{% static '/images/fig3.png' %}" alt="fig" id="fig" />
+	</canvas>
 </div>
 
+<script src="{% static '/js/vars.js' %}"></script>
+<script src="{% static '/js/functions.js' %}"></script>
+<script src="{% static '/js/messages.js' %}"></script>
+<script src="{% static '/js/figs.js' %}"></script>
 <script src="{% static '/js/game.js' %}"></script>
+<script src="{% static '/js/board.js' %}"></script>
 <script src="{% static '/js/ajax.js' %}"></script>
 
 <script>
-    setInterval(reloadRoom, 1000);
-    reloadRoom();
+	setInterval(reloadRoom, 300);
+	reloadRoom();
 </script>
-
-
 
 {% endblock content %}
