@@ -84,6 +84,8 @@ async function reloadRoom() {
 	const { players, history_records, player_id, notifications, chat_messages } =
 		data;
 
+	console.log("AJAX done");
+
 	const player = data.players.find((p) => p.id === player_id);
 
 	const history_records_div = document.getElementById("messages");
@@ -120,6 +122,10 @@ async function reloadRoom() {
 	}
 
 	PLAYERS = players;
+
+	const data_p = document.getElementById("data");
+	data_p.innerHTML =
+		"Heading from " + player.heading_from + " to pindex " + player.pindex;
 
 	drawBoard();
 

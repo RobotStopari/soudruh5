@@ -7,7 +7,7 @@ class PlayerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Player
-        fields = ['id', 'name', 'email', 'color', 'pindex', 'money', 'category', 'on_move']
+        fields = ['id', 'name', 'email', 'color', 'pindex', 'heading_from', 'money', 'category', 'on_move']
         
 class HistoryRecordSerializer(serializers.ModelSerializer):
 

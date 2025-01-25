@@ -73,8 +73,9 @@ function drawFigImage(pl_name, x, y, canvas, offset) {
 	ctx.fillText(pl_name, new_x * a - a / 2, new_y * a - a + fig_av - 5);
 }
 
-function drawFigOnBoard(player, offscreenCanvas) {
-	const { pindex } = player;
+function drawFigOnBoard(player, offscreenCanvas, location) {
+	const pindex = location;
+
 	const nameText = preparePlayerName(player);
 
 	// Default coordinates and rotation for the figure
@@ -121,7 +122,14 @@ function drawFigOnBoard(player, offscreenCanvas) {
 function drawPlayers(ctx) {
 	try {
 		PLAYERS.forEach((player) => {
-			drawFigOnBoard(player, prepareColoredPlayerFigure(player));
+			let move_times = player.pindex - player.heading_from;
+			for (move_times; move_times > 0; move_times--) {
+				drawFigOnBoard(
+					player,
+					prepareColoredPlayerFigure(player),
+					move_times + player.heading_from
+				);
+			}
 		});
 	} catch {
 		console.log("loading PLAYERS");

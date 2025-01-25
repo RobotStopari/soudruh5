@@ -4,6 +4,7 @@ def ResetPlayer(player): # vyresetuj data hráče
     player.joined_room_at = None
     
     player.pindex = 0
+    player.heading_from = 0
     player.money = 0
     player.category = '1-BEZ'
     player.marcs = 0

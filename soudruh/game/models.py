@@ -33,6 +33,7 @@ class Player(models.Model):
     
     #game data
     pindex = models.IntegerField(null=True, default=0)
+    heading_from = models.IntegerField(null=True, default=0)
     money = models.IntegerField(null=True, default=0)
     category = models.CharField(max_length=200, null=True, choices=CATEGORIES, default='1-BEZ')
     marcs = models.IntegerField(null=True, default=0)

@@ -216,6 +216,7 @@ def cube(request):
             
             if dice_roll != MAX_DICE * 4:
                 if player.pindex not in [1000, 1001]:
+                    player.heading_from = player.pindex
                     player.pindex += dice_roll
                 elif dice_roll >= MAX_DICE:
                     player.pindex = 0
